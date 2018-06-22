@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_distri"
+            android:icon="@drawable/distributors"
+            android:title="Distributors" />
+        <item
+            android:id="@+id/nav_routes"
+            android:icon="@drawable/route"
+            android:title="Routes" />
+        <item
+            android:id="@+id/nav_shops"
+            android:icon="@drawable/shops"
+            android:title="Shops" />
+        <item
+            android:id="@+id/nav_invoices"
+            android:icon="@drawable/invoice"
+            android:title="Invoices" />
+
+        <item
+            android:id="@+id/nav_reports"
+            android:icon="@drawable/report"
+            android:title="Reports" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/profile"
+            android:title="My Profile" />
+    </group>
+
+    <!--<item android:title="Profile">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_profile_update"-->
+                <!--android:icon="@drawable/profileicon"-->
+                <!--android:title="Profile Update" />-->
+
+            <!--<item-->
+                <!--android:id="@+id/nav_rating"-->
+                <!--android:icon="@drawable/rating"-->
+                <!--android:title="Rating" />-->
+
+            <!--<item-->
+                <!--android:id="@+id/nav_feedback"-->
+                <!--android:icon="@drawable/feedback"-->
+                <!--android:title="Feedback" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_changepw"-->
+                <!--android:icon="@drawable/changepw"-->
+                <!--android:title="Change Password" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_logout"-->
+                <!--android:icon="@drawable/logouticn"-->
+                <!--android:title="Logout" />-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>

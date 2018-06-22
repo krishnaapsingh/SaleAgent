@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/transfer_main"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:weightSum="10">-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="3"-->
+            <!--android:background="#270f33">-->
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/transfer_btn_back"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:src="@drawable/headerbg" />-->
+
+
+        <!--</RelativeLayout>-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="7">-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="vertical"-->
+                <!--android:weightSum="10">-->
+
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight=".25" />-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:layout_marginRight="20dp"-->
+                    <!--android:layout_weight="9.5"-->
+                    <!--android:orientation="vertical">-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.5"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp">-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_weight=".5">-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_alignParentLeft="true"-->
+                                <!--android:fontFamily="@font/roboto_regular"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="1 Coin = ₹ "-->
+                                <!--android:textColor="@color/colorPrimary"-->
+                                <!--android:textSize="18sp" />-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<TextView-->
+                            <!--android:layout_weight=".1"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:fontFamily="@font/roboto_regular"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:text="₹ "-->
+                            <!--android:textColor="@color/colorPrimary"-->
+                            <!--android:textSize="18sp" />-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/transfercoin_tv_coin_value"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginLeft="5dp"-->
+                            <!--android:layout_weight=".4"-->
+                            <!--android:background="@drawable/edittext_outbox"-->
+                            <!--android:fontFamily="@font/roboto_regular"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:paddingLeft="10dp"-->
+                            <!--android:paddingRight="10dp"-->
+                            <!--android:textColor="@android:color/black"-->
+                            <!--android:textSize="18sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.5"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp">-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_weight=".6">-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_alignParentLeft="true"-->
+                                <!--android:fontFamily="@font/roboto_regular"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="Available Coin"-->
+                                <!--android:textColor="@color/colorPrimary"-->
+                                <!--android:textSize="18sp" />-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/transfer_coin_tv_available_coin"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginLeft="5dp"-->
+                            <!--android:layout_weight=".4"-->
+                            <!--android:background="@drawable/edittext_outbox"-->
+                            <!--android:fontFamily="@font/roboto_regular"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:paddingLeft="10dp"-->
+                            <!--android:paddingRight="10dp"-->
+                            <!--android:textColor="@android:color/black"-->
+                            <!--android:textSize="18sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.5"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp">-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_weight=".6">-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_alignParentLeft="true"-->
+                                <!--android:layout_marginRight="5dp"-->
+                                <!--android:fontFamily="@font/roboto_regular"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="No of Transfer Coin"-->
+                                <!--android:textColor="@color/colorPrimary"-->
+                                <!--android:textSize="18sp" />-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<EditText-->
+                            <!--android:id="@+id/transfercoin_et_noofcoin_transfer"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginLeft="5dp"-->
+                            <!--android:layout_weight=".4"-->
+                            <!--android:background="@drawable/edittext_outbox"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:imeOptions="actionNext"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLines="1"-->
+                            <!--android:paddingLeft="10dp"-->
+                            <!--android:paddingRight="10dp"-->
+                            <!--android:textColor="@android:color/black" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.5"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp">-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_weight=".6">-->
+
+                            <!--<TextView-->
+                                <!--android:id="@+id/buycoins_tv_buy_coins"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_alignParentLeft="true"-->
+                                <!--android:fontFamily="@font/roboto_regular"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="Transfer Name"-->
+                                <!--android:textColor="@color/colorPrimary"-->
+                                <!--android:textSize="18sp" />-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<EditText-->
+                            <!--android:id="@+id/transfercoin_et_transfer_name"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginLeft="5dp"-->
+                            <!--android:layout_weight=".4"-->
+                            <!--android:background="@drawable/edittext_outbox"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:imeOptions="actionNext"-->
+                            <!--android:inputType="text"-->
+                            <!--android:maxLines="1"-->
+                            <!--android:paddingLeft="10dp"-->
+                            <!--android:paddingRight="10dp"-->
+                            <!--android:textColor="@android:color/black"-->
+                            <!--android:textSize="18sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.5"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:paddingBottom="10dp"-->
+                        <!--android:paddingTop="10dp">-->
+
+                        <!--<RelativeLayout-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_weight=".6">-->
+
+                            <!--<TextView-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="match_parent"-->
+                                <!--android:layout_alignParentLeft="true"-->
+                                <!--android:fontFamily="@font/roboto_regular"-->
+                                <!--android:gravity="center_vertical"-->
+                                <!--android:text="Transfer Mobile No"-->
+                                <!--android:textColor="@color/colorPrimary"-->
+                                <!--android:textSize="18sp" />-->
+                        <!--</RelativeLayout>-->
+
+                        <!--<EditText-->
+                            <!--android:id="@+id/transfercoin_et_transfer_mobile"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:layout_marginLeft="5dp"-->
+                            <!--android:layout_weight=".4"-->
+                            <!--android:background="@drawable/edittext_outbox"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:imeOptions="actionDone"-->
+                            <!--android:inputType="phone"-->
+                            <!--android:maxLines="1"-->
+                            <!--android:paddingLeft="10dp"-->
+                            <!--android:paddingRight="10dp"-->
+                            <!--android:textColor="@android:color/black"-->
+                            <!--android:textSize="18sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight=".5" />-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1.2">-->
+
+                        <!--<Button-->
+                            <!--android:id="@+id/transfer_btn_transfer"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:background="@drawable/button_background"-->
+                            <!--android:fontFamily="@font/roboto_bold"-->
+                            <!--android:text="@string/transfer"-->
+                            <!--android:textAllCaps="false"-->
+                            <!--android:textColor="@android:color/white"-->
+                            <!--android:textSize="20sp" />-->
+
+                    <!--</RelativeLayout>-->
+                <!--</LinearLayout>-->
+
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight=".45" />-->
+            <!--</LinearLayout>-->
+        <!--</RelativeLayout>-->
+
+    <!--</LinearLayout>-->
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_otp_transfer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:background="@color/card_back_ground"-->
+        <!--android:elevation="50dp"-->
+        <!--android:padding="10dp"-->
+        <!--android:visibility="gone">-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/transfer_et_otp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_margin="20dp"-->
+            <!--android:background="@drawable/edittext_outbox"-->
+            <!--android:hint="Enter OTP"-->
+            <!--android:imeOptions="actionDone"-->
+            <!--android:inputType="number"-->
+            <!--android:maxLines="1"-->
+            <!--android:padding="10dp" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/transfer_otp_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:background="@drawable/button_background"-->
+            <!--android:text="Next"-->
+            <!--android:textColor="@android:color/white" />-->
+
+    <!--</RelativeLayout>-->
+
+    <!--<com.wang.avi.AVLoadingIndicatorView-->
+        <!--android:id="@+id/transfer_avi"-->
+        <!--style="@style/AVLoadingIndicatorView.Large"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:visibility="visible"-->
+        <!--app:indicatorColor="@color/colorPrimaryDark"-->
+        <!--app:indicatorName="BallBeatIndicator" />-->
+
+</RelativeLayout>
