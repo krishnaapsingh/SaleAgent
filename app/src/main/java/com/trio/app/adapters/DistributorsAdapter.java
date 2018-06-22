@@ -39,7 +39,7 @@ public class DistributorsAdapter extends RecyclerView.Adapter<DistributorsAdapte
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public class MyLayout extends RecyclerView.ViewHolder {

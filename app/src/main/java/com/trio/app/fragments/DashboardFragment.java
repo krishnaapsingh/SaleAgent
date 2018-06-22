@@ -21,6 +21,7 @@ import com.trio.app.models.TargetModel;
 import com.trio.app.rest.ApiClient;
 import com.trio.app.rest.ApiInterface;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import retrofit2.Call;
@@ -57,7 +58,8 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         Calendar c = Calendar.getInstance();
         year =String.valueOf(c.get(Calendar.YEAR));
-        month=String.valueOf(c.get(Calendar.MONTH));
+        SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
+        month = month_date.format(c.getTime());
         licenceNo = SavePref.getLoginData().LicenseNumber;
         emailId = SavePref.getLoginData().EmailID;
 

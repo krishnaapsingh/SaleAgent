@@ -58,7 +58,7 @@ public class DistributorsFragment extends Fragment {
         rvDistributors = view.findViewById(R.id.rvDistributors);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvDistributors.setLayoutManager(mLayoutManager);
-        rvDistributors.setItemAnimator(new DefaultItemAnimator());
+        //rvDistributors.setItemAnimator(new DefaultItemAnimator());
 
         hud = KProgressHUD.create(getActivity())
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -71,7 +71,7 @@ public class DistributorsFragment extends Fragment {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&& "+emailId;
+        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&&"+emailId;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<DistributorsModel>> call = apiInterface.getDistributors(url);
         call.enqueue(new Callback<List<DistributorsModel>>() {
