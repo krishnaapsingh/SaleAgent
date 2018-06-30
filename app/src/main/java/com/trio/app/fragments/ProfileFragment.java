@@ -186,7 +186,7 @@ public class ProfileFragment extends Fragment {
         Glide.with(getActivity())
                 .load(SavePref.getLoginData().UserPic)
                 .centerCrop()
-                .placeholder(R.drawable.profile1)
+//                .placeholder(R.drawable.profile1)
                 .error(R.drawable.profile1)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH)

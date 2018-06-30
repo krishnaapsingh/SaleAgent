@@ -13,7 +13,7 @@ public class ShopModel {
     public String Shop;
     public String Owner;
     public String Contact;
-    public String Pictur;
+    public String Picture;
     public String ID;
 }
 

@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "http://beta.bytepaper.com/";
+    public static final String BASE_URL = "http://manage.bytepaper.com/";
 
 
     public static ApiInterface getClient() {

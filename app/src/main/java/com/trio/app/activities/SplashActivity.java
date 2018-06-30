@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (SavePref.getLogin()){
+                if (SavePref.getIsUserLogin()){
                     Intent i = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(i);
                     SplashActivity.this.finish();
@@ -41,6 +41,9 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(i);
                     SplashActivity.this.finish();
                 }
+
+
+
             }
         }, 2000);
 

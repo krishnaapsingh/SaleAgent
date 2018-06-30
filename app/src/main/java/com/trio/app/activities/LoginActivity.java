@@ -81,8 +81,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                 LoginModel obj = response.body();
                 if (obj.Status.equalsIgnoreCase("Success")) {
-                    SavePref.saveLogin(true);
                     SavePref.setLoginData(obj);
+                    SavePref.isUserLogin(true);
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);

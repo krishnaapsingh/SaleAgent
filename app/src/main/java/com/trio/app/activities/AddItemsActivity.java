@@ -31,54 +31,53 @@ public class AddItemsActivity extends AppCompatActivity {
 
     private boolean inBackground = false;
     boolean checkBackground = false;
-    public void onResume() {
-        inBackground = false;
+//    public void onResume() {
+//        inBackground = false;
+//
+//        if (checkBackground) {
+//            alertDialogForSessionTimeOut();
+//        }
+//        super.onResume();
+//    }
 
-        if (checkBackground) {
-            alertDialogForSessionTimeOut();
-        }
-        super.onResume();
-    }
-
-    private void alertDialogForSessionTimeOut() {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle("Sesion timeout ")
-                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (alert.isShowing()) {
-                    alert.dismiss();
-                    Hawk.deleteAll();
-                    SavePref.saveLogin(false);
-                    startActivity(new Intent(AddItemsActivity.this, LoginActivity.class));
-                    AddItemsActivity.this.finish();
-                }
-            }
-        }, 2000);
-
-    }
-
-    @Override
-    public void onPause()
-    {
-        inBackground = true;
-        new CountDownTimer(300000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                if (inBackground) {
-                    checkBackground = true;
-                }
-            }
-        }.start();
-        super.onPause();
-    }
+//    private void alertDialogForSessionTimeOut() {
+//
+//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+//                .setTitle("Sesion timeout ")
+//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
+//        final AlertDialog alert = dialog.create();
+//        alert.show();
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (alert.isShowing()) {
+//                    alert.dismiss();
+//                    Hawk.deleteAll();
+//                    startActivity(new Intent(AddItemsActivity.this, LoginActivity.class));
+//                    AddItemsActivity.this.finish();
+//                }
+//            }
+//        }, 2000);
+//
+//    }
+//
+//    @Override
+//    public void onPause()
+//    {
+//        inBackground = true;
+//        new CountDownTimer(300000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            public void onFinish() {
+//                if (inBackground) {
+//                    checkBackground = true;
+//                }
+//            }
+//        }.start();
+//        super.onPause();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -131,54 +131,53 @@ public class InvoicesActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onResume() {
-        inBackground = false;
-
-        if (checkBackground) {
-            alertDialogForSessionTimeOut();
-        }
-        super.onResume();
-    }
-
-    private void alertDialogForSessionTimeOut() {
-
-        final android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Sesion timeout ")
-                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-        final android.app.AlertDialog alert = dialog.create();
-        alert.show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (alert.isShowing()) {
-                    alert.dismiss();
-                    Hawk.deleteAll();
-                    SavePref.saveLogin(false);
-                    startActivity(new Intent(InvoicesActivity.this, LoginActivity.class));
-                    InvoicesActivity.this.finish();
-                }
-            }
-        }, 2000);
-
-    }
-
-    @Override
-    public void onPause() {
-        inBackground = true;
-        new CountDownTimer(300000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                if (inBackground) {
-                    checkBackground = true;
-                }
-            }
-        }.start();
-        super.onPause();
-    }
+//    @Override
+//    public void onResume() {
+//        inBackground = false;
+//
+//        if (checkBackground) {
+//            alertDialogForSessionTimeOut();
+//        }
+//        super.onResume();
+//    }
+//
+//    private void alertDialogForSessionTimeOut() {
+//
+//        final android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
+//                .setTitle("Sesion timeout ")
+//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
+//        final android.app.AlertDialog alert = dialog.create();
+//        alert.show();
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (alert.isShowing()) {
+//                    alert.dismiss();
+//                    Hawk.deleteAll();
+//                    startActivity(new Intent(InvoicesActivity.this, LoginActivity.class));
+//                    InvoicesActivity.this.finish();
+//                }
+//            }
+//        }, 2000);
+//
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        inBackground = true;
+//        new CountDownTimer(300000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            public void onFinish() {
+//                if (inBackground) {
+//                    checkBackground = true;
+//                }
+//            }
+//        }.start();
+//        super.onPause();
+//    }
 
     private void getInvoiceList() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;

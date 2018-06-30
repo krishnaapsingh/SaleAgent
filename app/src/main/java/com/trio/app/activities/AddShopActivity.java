@@ -26,10 +26,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.orhanobut.hawk.Hawk;
 import com.trio.app.BuildConfig;
 import com.trio.app.R;
+import com.trio.app.appcontrollers.GPSTracker;
 import com.trio.app.appcontrollers.ImageFilePath;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.models.RouteModel;
@@ -40,7 +46,9 @@ import com.trio.app.rest.ApiInterface;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,9 +73,12 @@ public class AddShopActivity extends AppCompatActivity {
     LinearLayout llAddItems, llSpn, llShopImage;
     Spinner spnMonth;
     int Count = 0;
-    private boolean inBackground = false;
     boolean checkBackground = false;
-
+    List<RouteModel> routeModelList;
+    private boolean inBackground = false;
+    GPSTracker gps;
+    Double lattitude;
+    Double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +171,28 @@ public class AddShopActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 011);
+            return;
+        } else {
+            gps = new GPSTracker(this);
+            if (gps.canGetLocation()) {
+
+                lattitude = gps.getLatitude();
+                longitude = gps.getLongitude();
+
+            } else {
+
+                gps.showSettingsAlert();
+            }
+        }
+
+    }
+
+    @Override
     public void onBackPressed() {
         AddShopActivity.this.finish();
     }
@@ -174,12 +207,12 @@ public class AddShopActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<RouteModel>>() {
             @Override
             public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
-                List<RouteModel> obj = response.body();
-                if (obj.size() != 0) {
-                    SavePref.saveMappedRoute(obj);
+                routeModelList = response.body();
+                if (routeModelList.size() != 0) {
+//                    SavePref.saveMappedRoute(obj);
 
-                    for (int i = 0; i < SavePref.fetchMappedRoute().size(); i++) {
-                        routeList.add(SavePref.fetchMappedRoute().get(i).RouteName);
+                    for (int i = 0; i < routeModelList.size(); i++) {
+                        routeList.add(routeModelList.get(i).RouteName);
                     }
                     alertDialogForRoute();
 //                    adapter = new RouteAdapter(obj);
@@ -195,54 +228,53 @@ public class AddShopActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onResume() {
-        inBackground = false;
-
-        if (checkBackground) {
-            alertDialogForSessionTimeOut();
-        }
-        super.onResume();
-    }
-
-    private void alertDialogForSessionTimeOut() {
-
-        final android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Sesion timeout ")
-                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-        final android.app.AlertDialog alert = dialog.create();
-        alert.show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (alert.isShowing()) {
-                    alert.dismiss();
-                    Hawk.deleteAll();
-                    SavePref.saveLogin(false);
-                    startActivity(new Intent(AddShopActivity.this, LoginActivity.class));
-                    AddShopActivity.this.finish();
-                }
-            }
-        }, 2000);
-
-    }
-
-    @Override
-    public void onPause() {
-        inBackground = true;
-        new CountDownTimer(300000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                if (inBackground) {
-                    checkBackground = true;
-                }
-            }
-        }.start();
-        super.onPause();
-    }
+//    @Override
+//    public void onResume() {
+//        inBackground = false;
+//
+//        if (checkBackground) {
+//            alertDialogForSessionTimeOut();
+//        }
+//        super.onResume();
+//    }
+//
+//    private void alertDialogForSessionTimeOut() {
+//
+//        final android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
+//                .setTitle("Sesion timeout ")
+//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
+//        final android.app.AlertDialog alert = dialog.create();
+//        alert.show();
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (alert.isShowing()) {
+//                    alert.dismiss();
+//                    Hawk.deleteAll();
+//                    startActivity(new Intent(AddShopActivity.this, LoginActivity.class));
+//                    AddShopActivity.this.finish();
+//                }
+//            }
+//        }, 2000);
+//
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        inBackground = true;
+//        new CountDownTimer(300000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            public void onFinish() {
+//                if (inBackground) {
+//                    checkBackground = true;
+//                }
+//            }
+//        }.start();
+//        super.onPause();
+//    }
 
 
     private void createShop() {
@@ -255,11 +287,12 @@ public class AddShopActivity extends AppCompatActivity {
 
         hud.show();
 
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?createShop&&" + licenceNo + "&&" + emailId + "&&" + route + "&&" + shopName + "&&" + ownername + "&&" + contactNo + "&&Picture";
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?createShop&&" + licenceNo + "&&" + emailId + "&&" + route + "&&" + shopName + "&&" + ownername + "&&" + contactNo + "&&Picture";
 
 
         ApiInterface apiInterface = ApiClient.getClient();
-        Call<ShopCreated> call = apiInterface.createShop(url);
+        Call<ShopCreated> call = apiInterface.createShop(licenceNo, emailId,route, ownername, shopName, contactNo, lattitude.toString(), longitude.toString(), myFile);
+
         call.enqueue(new Callback<ShopCreated>() {
             @Override
             public void onResponse(Call<ShopCreated> call, Response<ShopCreated> response) {
@@ -278,6 +311,8 @@ public class AddShopActivity extends AppCompatActivity {
                 hud.dismiss();
             }
         });
+
+
     }
 
     private int validation() {
@@ -302,7 +337,7 @@ public class AddShopActivity extends AppCompatActivity {
             etMobile.setError("enter shop owner contact number");
             Toast.makeText(this, "enter shop owner contact number", Toast.LENGTH_SHORT).show();
             check++;
-        }else if (etMobile.getText().toString().length() <= 9) {
+        } else if (etMobile.getText().toString().length() <= 9) {
             etMobile.setError("enter correct shop owner contact number");
             Toast.makeText(this, "enter correct shop owner contact number", Toast.LENGTH_SHORT).show();
             check++;

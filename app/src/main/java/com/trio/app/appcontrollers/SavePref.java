@@ -13,14 +13,6 @@ import java.util.List;
 
 public class SavePref {
 
-    public static void saveLogin(boolean b) {
-        Hawk.put("LOGIN_STATUS", b);
-    }
-
-    public static boolean getLogin() {
-        return Hawk.get("LOGIN_STATUS", false);
-    }
-
     public static LoginModel getLoginData() {
         return Hawk.get("Login_Data", null);
     }
@@ -28,23 +20,6 @@ public class SavePref {
     public static void setLoginData(LoginModel loginObj) {
         Hawk.put("Login_Data", loginObj);
     }
-
-    public static void saveMappedRoute(List<RouteModel> obj) {
-        Hawk.put("Route", obj);
-    }
-
-    public static List<RouteModel> fetchMappedRoute() {
-        return Hawk.get("Route");
-    }
-
-    public static void saveAchieveSale(String achievedAmount) {
-        Hawk.put("achieveamt", achievedAmount);
-    }
-
-    public static String fetchAchieveSale() {
-        return Hawk.get("achieveamt", "0");
-    }
-
 
     public static void saveShopName(String shopname) {
         Hawk.put("shopname", shopname);
@@ -68,6 +43,13 @@ public class SavePref {
 
     public static String fetchShopAddress() {
         return Hawk.get("address", "");
+    }
 
+    public static void isUserLogin(boolean b) {
+        Hawk.put("login", b);
+    }
+
+    public static boolean getIsUserLogin() {
+        return Hawk.get("login", false);
     }
 }

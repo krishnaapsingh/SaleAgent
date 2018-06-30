@@ -12,10 +12,14 @@ import com.trio.app.models.ShopCreated;
 import com.trio.app.models.ShopModel;
 import com.trio.app.models.TargetModel;
 
+import java.io.File;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Url;
 
 /**
@@ -43,8 +47,18 @@ public interface ApiInterface {
     @GET
     Call<List<ShopModel>> getShopsList(@Url String url);
 
-    @GET
-    Call<ShopCreated> createShop(@Url String url);
+
+    @FormUrlEncoded
+    @POST("Mobile/Manufacturing/index.php")
+    Call<ShopCreated> createShop(@Field("LicenseNumber") String licenceNo,
+                                 @Field("EmployeeID") String emailId,
+                                 @Field("Route") String route,
+                                 @Field("OwnerName") String ownername,
+                                 @Field("ShopName") String shopName,
+                                 @Field("ContactNumber") String contactNo,
+                                 @Field("Lat") String s,
+                                 @Field("Long") String s1,
+                                 @Field("Picture") File myFile);
 
     @GET
     Call<ShopCreated> updateProfile(@Url String url);

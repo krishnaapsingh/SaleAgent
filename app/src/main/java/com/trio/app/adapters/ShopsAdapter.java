@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trio.app.R;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.models.ShopModel;
@@ -64,10 +66,9 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
         if (list.get(position).StateName != null) {
             holder.tvState.setText(list.get(position).StateName);
         }
-        if (list.get(position).Pictur != null) {
-            Glide.with(mContext).load(SavePref.getLoginData().UserPic).into(holder.ivImage);
+//        if (list.get(position).Pictur != null) {
+            Glide.with(mContext).load(list.get(position).Picture).into(holder.ivImage);
 
-        }
 
     }
 

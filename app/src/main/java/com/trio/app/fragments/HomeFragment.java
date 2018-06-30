@@ -1,8 +1,10 @@
 package com.trio.app.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.trio.app.R;
+import com.trio.app.activities.AddShopActivity;
 import com.trio.app.activities.MainActivity;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.models.AchievedModel;
@@ -35,9 +38,9 @@ import retrofit2.Response;
  */
 
 @SuppressLint("ValidFragment")
-public class DashboardFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    public static final String TAG = DashboardFragment.class.getSimpleName();
+    public static final String TAG = HomeFragment.class.getSimpleName();
     String id;
 
     MainActivity activity;
@@ -52,16 +55,17 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     Animation slide_down, slide_up;
     long target, achieve;
     int check=0;
+    FloatingActionButton fab;
 
     @SuppressLint("ValidFragment")
-    public DashboardFragment(MainActivity context) {
+    public HomeFragment(MainActivity context) {
         this.activity = context;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         Calendar c = Calendar.getInstance();
         year = String.valueOf(c.get(Calendar.YEAR));
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
@@ -103,7 +107,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             public void onResponse(Call<AchievedModel> call, Response<AchievedModel> response) {
                 AchievedModel obj = response.body();
                 if (obj.AchievedAmount != null) {
-                    SavePref.saveAchieveSale(obj.AchievedAmount);
                     tvAchievedSale.setText(obj.AchievedAmount);
                     achieve = Long.parseLong(obj.AchievedAmount);
                 } else {
@@ -174,6 +177,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         tvAchievedSale = view.findViewById(R.id.tvAchievedSale);
         tvTargetSale = view.findViewById(R.id.tvTargetSale);
+        fab = view.findViewById(R.id.fab);
 
         cvDrop = view.findViewById(R.id.cvDrop);
         rlCancel = view.findViewById(R.id.rlCancel);
@@ -186,6 +190,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         cvInvoices.setOnClickListener(this);
         cvReports.setOnClickListener(this);
         cvMyProfile.setOnClickListener(this);
+        fab.setOnClickListener(this);
 
 //        tabLayout = view.findViewById(R.id.tablayout);
 //        viewPager = view.findViewById(R.id.viewpager);
@@ -217,6 +222,9 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 break;
             case R.id.cvMyProfile:
                 activity.onClick(6);
+                break;
+            case R.id.fab:
+                startActivity(new Intent(getActivity(), AddShopActivity.class));
                 break;
 
         }

@@ -100,7 +100,6 @@ public class RoutesFragment extends Fragment {
             public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
                 List<RouteModel> obj = response.body();
                 if (obj.size()!=0){
-                    SavePref.saveMappedRoute(obj);
                     adapter = new RouteAdapter(obj);
                     rvRoute.setAdapter(adapter);
                 }else {

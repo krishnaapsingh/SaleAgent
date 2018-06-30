@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -20,10 +18,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.orhanobut.hawk.Hawk;
 import com.trio.app.R;
 import com.trio.app.appcontrollers.SavePref;
-import com.trio.app.fragments.DashboardFragment;
+import com.trio.app.fragments.HomeFragment;
 import com.trio.app.fragments.DistributorsFragment;
 import com.trio.app.fragments.InvoicesFragment;
 import com.trio.app.fragments.ProfileFragment;
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         Glide.with(MainActivity.this)
                 .load(SavePref.getLoginData().UserPic)
                 .centerCrop()
-                .placeholder(R.drawable.profile1)
+//                .placeholder(R.drawable.profile1)
                 .error(R.drawable.profile1)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .priority(Priority.HIGH)
@@ -81,57 +78,56 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onResume() {
-        inBackground = false;
-
-        if (checkBackground) {
-            alertDialogForSessionTimeOut();
-        }
-        super.onResume();
-    }
-
-    private void alertDialogForSessionTimeOut() {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                .setTitle("Sesion timeout ")
-                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (alert.isShowing()) {
-                    alert.dismiss();
-                    Hawk.deleteAll();
-                    SavePref.saveLogin(false);
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    MainActivity.this.finish();
-                }
-            }
-        }, 2000);
-
-    }
-
-    @Override
-    public void onPause() {
-        inBackground = true;
-        new CountDownTimer(300000, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-                if (inBackground) {
-                    checkBackground = true;
-                }
-            }
-        }.start();
-        super.onPause();
-    }
+//    @Override
+//    public void onResume() {
+//        inBackground = false;
+//
+//        if (checkBackground) {
+//            alertDialogForSessionTimeOut();
+//        }
+//        super.onResume();
+//    }
+//
+//    private void alertDialogForSessionTimeOut() {
+//
+//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+//                .setTitle("Sesion timeout ")
+//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
+//        final AlertDialog alert = dialog.create();
+//        alert.show();
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (alert.isShowing()) {
+//                    alert.dismiss();
+//                    Hawk.deleteAll();
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                    MainActivity.this.finish();
+//                }
+//            }
+//        }, 2000);
+//
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        inBackground = true;
+//        new CountDownTimer(300000, 1000) {
+//            public void onTick(long millisUntilFinished) {
+//            }
+//
+//            public void onFinish() {
+//                if (inBackground) {
+//                    checkBackground = true;
+//                }
+//            }
+//        }.start();
+//        super.onPause();
+//    }
 
     private void getView() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new DashboardFragment(this)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new HomeFragment(this)).commit();
     }
 
     @Override
@@ -143,7 +139,7 @@ public class MainActivity extends AppCompatActivity
             exitByBackKey();
         } else {
             toolbar.setTitle("Sales Agent");
-            Fragment fragment = new DashboardFragment(this);
+            Fragment fragment = new HomeFragment(this);
             check = 0;
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
         }
@@ -216,17 +212,10 @@ public class MainActivity extends AppCompatActivity
 
                 break;
 
-            case R.id.nav_logout:
-                logoutAlertDialog();
-//                Hawk.deleteAll();
-//                check = 1;
-//                fragmmentTrans(fragment, tag);
-
-                break;
             default:
-                fragment = new DashboardFragment(this);
+                fragment = new HomeFragment(this);
                 title = "Sales Agent";
-                tag = DashboardFragment.TAG;
+                tag = HomeFragment.TAG;
                 check = 0;
                 fragmmentTrans(fragment, tag);
                 break;
@@ -236,20 +225,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void logoutAlertDialog() {
-        new AlertDialog.Builder(this)
-                .setMessage("Do you want to logout application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Hawk.deleteAll();
-                        SavePref.saveLogin(false);
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        MainActivity.this.finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }
 
     public void fragmmentTrans(Fragment fragment, String tag) {
         getSupportFragmentManager().beginTransaction()
@@ -266,8 +241,8 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case 0:
                 title = "Sales Agent";
-                fragment = new DashboardFragment(this);
-                tag = DashboardFragment.TAG;
+                fragment = new HomeFragment(this);
+                tag = HomeFragment.TAG;
                 check = 0;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
@@ -331,8 +306,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
                 title = "Sales Agent";
-                fragment = new DashboardFragment(this);
-                tag = DashboardFragment.TAG;
+                fragment = new HomeFragment(this);
+                tag = HomeFragment.TAG;
                 check = 0;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
