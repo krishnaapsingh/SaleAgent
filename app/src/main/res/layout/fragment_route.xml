@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
+            android:padding="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -74,6 +75,7 @@
         android:layout_weight=".9">
 
         <android.support.v7.widget.RecyclerView
+            android:paddingTop="2dp"
             android:id="@+id/rvRoute"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

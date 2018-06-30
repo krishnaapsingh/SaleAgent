@@ -18,6 +18,18 @@
             android:layout_weight="3"
             android:padding="5dp">
 
+            <RelativeLayout
+                android:padding="5dp"
+                android:id="@+id/rlEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/editprofile"/>
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,23 +42,13 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center_vertical">
 
-
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imgview"
+                        android:id="@+id/ivProfileImage"
                         android:layout_width="100dp"
-                        android:layout_centerInParent="true"
                         android:layout_height="100dp"
-                        android:src="@drawable/imagebg"
-                        app:civ_border_color="#FF000000"
+                        android:layout_centerInParent="true"
+                        app:civ_border_color="@color/colorPrimary"
                         app:civ_border_width="2dp" />
-
-                    <ImageView
-                        android:id="@+id/profile_iv_edit_image"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true" />
-
 
                 </RelativeLayout>
 
@@ -80,31 +82,31 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_weight=".8"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="0dp"
+                android:layout_weight=".8"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/llCalender"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal"
                     android:paddingLeft="10dp">
 
                     <EditText
-                        android:enabled="false"
-                        android:nextFocusDown="@id/etEmail"
                         android:id="@+id/etUserName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/edittext_outbox"
+                        android:enabled="false"
                         android:hint="User Name"
                         android:imeOptions="actionNext"
-                        android:inputType="date"
+                        android:inputType="text"
                         android:maxLines="1"
-                        android:padding="5dp" />
+                        android:nextFocusDown="@id/etEmail"
+                        android:padding="5dp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -115,17 +117,18 @@
                     android:paddingLeft="10dp">
 
                     <EditText
-                        android:nextFocusDown="@id/etMobile"
-                        android:enabled="false"
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/edittext_outbox"
+                        android:enabled="false"
                         android:hint="Email ID"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
-                        android:padding="5dp" />
+                        android:nextFocusDown="@id/etMobile"
+                        android:padding="5dp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -142,28 +145,28 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/edittext_outbox"
                         android:hint="Contact Number"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone"
                         android:maxLines="1"
-                        android:nextFocusDown="@id/etPassword"
-                        android:paddingLeft="5dp" />
+                        android:paddingLeft="5dp"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp">
+                    android:paddingLeft="10dp"
+                    android:visibility="gone">
 
 
                     <EditText
-                        android:enabled="false"
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/edittext_outbox"
+                        android:enabled="false"
                         android:hint="Password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
@@ -174,20 +177,21 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_weight=".2"
-                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="0dp">
+                android:layout_height="0dp"
+                android:layout_weight=".2"
+                android:gravity="center_vertical">
 
                 <Button
-                    android:visibility="gone"
                     android:id="@+id/btnUpdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_background"
                     android:text="Update Profile"
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:textSize="@dimen/medium_text"
+                    android:textColor="@color/white"
+                    />
             </RelativeLayout>
 
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,8 +13,9 @@
             android:id="@+id/rl1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="3.3"
             android:background="@color/colorPrimary">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,12 +40,13 @@
                             app:cardElevation="10dp">
 
                             <LinearLayout
+                                android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="match_parent"
+                                    android:layout_width="60dp"
                                     android:layout_height="60dp"
                                     android:padding="5dp"
                                     android:src="@drawable/target" />
@@ -81,12 +82,13 @@
                             app:cardElevation="10dp">
 
                             <LinearLayout
+                                android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="match_parent"
+                                    android:layout_width="60dp"
                                     android:layout_height="60dp"
                                     android:padding="5dp"
                                     android:src="@drawable/achieved" />
@@ -110,37 +112,60 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-
-                <TextView
-                    android:id="@+id/main_tv_coinvalue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="5dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
-
-
-                <TextView
-                    android:id="@+id/main_tv_available_coin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/white_outbox"
-                    android:fontFamily="@font/roboto_regular"
-                    android:padding="8dp"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
-                    android:visibility="gone" />
             </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cvDrop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:elevation="10dp"
+                app:cardBackgroundColor="@color/lightred">
+
+                <RelativeLayout
+                    android:id="@+id/rlDrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lightred"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="0dp"
+                    android:paddingTop="2dp">
+
+                    <RelativeLayout
+                        android:id="@+id/rlCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="2dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/cross" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loser! You are behind your set target"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/small_text" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7">
+            android:layout_weight="6.7">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,6 +189,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -175,8 +201,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/distriobutors1" />
 
                                 <TextView
@@ -201,6 +227,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -212,8 +239,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/route1" />
 
 
@@ -244,6 +271,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -255,8 +283,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/shops1" />
 
 
@@ -280,6 +308,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -291,8 +320,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/invoices1" />
 
 
@@ -324,6 +353,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -335,8 +365,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/report1" />
 
                                 <TextView
@@ -359,6 +389,7 @@
                         app:cardElevation="10dp">
 
                         <RelativeLayout
+                            android:background="@drawable/my_ripple"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
@@ -370,8 +401,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
                                     android:src="@drawable/profile1" />
 
                                 <TextView
@@ -400,7 +431,7 @@
         android:clickable="true"
         android:src="@drawable/adds"
         app:layout_anchor="@id/rl1"
-        app:layout_anchorGravity="bottom|right|end"/>
+        app:layout_anchorGravity="bottom|right|end" />
 
 
 </android.support.design.widget.CoordinatorLayout>

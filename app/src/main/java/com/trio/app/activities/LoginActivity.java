@@ -39,13 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         etLoginId = findViewById(R.id.etLoginId);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-//        avi = findViewById(R.id.avi);
-//        avi.hide();
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                avi.show();
-                if (validation()) {
+                if (validation()==0) {
                     hud.show();
                     Login(etLoginId.getText().toString().trim(), etPassword.getText().toString().trim());
 
@@ -56,23 +53,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private boolean validation() {
+    private int validation() {
+        int check=0;
         if (ApiClient.isEmptyString(etLoginId.getText().toString().trim())) {
+            check++;
+            etLoginId.setError("Please Enter Login Id");
             Toast.makeText(this, "Please Enter Login Id", Toast.LENGTH_SHORT).show();
-            return false;
-        } else if (ApiClient.isEmptyString(etPassword.getText().toString().trim())) {
-            Toast.makeText(this, "Please Enter Valid Password", Toast.LENGTH_SHORT).show();
-            return false;
-        } else {
-            return true;
         }
+        if (ApiClient.isEmptyString(etPassword.getText().toString().trim())) {
+            check++;
+            etPassword.setError("Please Enter Valid Password");
+            Toast.makeText(this, "Please Enter Valid Password", Toast.LENGTH_SHORT).show();
+        }
+        return check;
 
     }
 
 
     private void Login(String username, String password) {
 
-        String url = "http://beta.bytepaper.com/Mobile/api.php?getuserdetail&&" + username + "&&" + password;
+        String url = "http://manage.bytepaper.com/Mobile/api.php?getuserdetail&&" + username + "&&" + password;
 
         ApiInterface apiInterface = ApiClient.getClient();
         Call<LoginModel> call = apiInterface.loginUser(url);
@@ -81,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginModel> call, Response<LoginModel> response) {
                 LoginModel obj = response.body();
                 if (obj.Status.equalsIgnoreCase("Success")) {
+                    SavePref.saveLogin(true);
                     SavePref.setLoginData(obj);
                     Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

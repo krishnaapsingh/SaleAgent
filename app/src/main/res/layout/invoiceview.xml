@@ -5,99 +5,105 @@
 
 
     <LinearLayout
+        android:id="@+id/ll1"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text"
-                    android:text="Invoice no. "/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Invoice no. "
                     android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text"
-                    android:text="123456"/>
+                    android:textSize="@dimen/medium_text" />
+
+                <TextView
+                    android:id="@+id/tvInvoiceNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="end"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
+                android:gravity="end"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text"
-                    android:text="Date "/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Date "
                     android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text"
-                    android:text="12/03/2018"/>
+                    android:textSize="@dimen/medium_text" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Net Amount"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/large_text"
-                    android:text="Net Amount"/>
+                    android:textSize="@dimen/large_text" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="end"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
+                android:gravity="end"
                 android:orientation="horizontal">
+
                 <TextView
+                    android:id="@+id/tvNetAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/large_text"
-                    android:text="15000 "/>
+                    android:textSize="@dimen/large_text" />
 
 
             </LinearLayout>
@@ -105,41 +111,44 @@
         </LinearLayout>
 
         <LinearLayout
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:orientation="horizontal">
+
                 <TextView
+                    android:id="@+id/tvTotalItems"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="120 Items"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/small_text"
-                    android:text="120 Items"/>
+                    android:textSize="@dimen/small_text" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="end"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
+                android:gravity="end"
                 android:orientation="horizontal">
+
                 <TextView
+                    android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/small_text"
-                    android:text="Outstanding"/>
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/small_text" />
 
             </LinearLayout>
 
@@ -147,5 +156,11 @@
 
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ll1"
+        android:background="@color/black_overlay" />
 
 </RelativeLayout>

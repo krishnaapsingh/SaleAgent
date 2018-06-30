@@ -19,6 +19,7 @@ public class GlobalVariable extends Application {
         super.onCreate();
         mInstance = this;
         timeHawkInit();
+
     }
 
     public static synchronized GlobalVariable getInstance() {

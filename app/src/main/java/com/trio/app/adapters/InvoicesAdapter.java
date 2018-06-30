@@ -4,26 +4,31 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.trio.app.R;
-import com.trio.app.models.TransferConfirmData;
+import com.trio.app.appcontrollers.AdapterItemClick;
+import com.trio.app.fragments.InvoicesFragment;
+import com.trio.app.models.InvoiceModel;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by User on 15-Jan-18.
  */
 
-public class InvoicesAdapter extends RecyclerView.Adapter<InvoicesAdapter.ViewHolder>{
+public class InvoicesAdapter extends RecyclerView.Adapter<InvoicesAdapter.ViewHolder> {
 
-    List<TransferConfirmData.InneTransferData> list;
-//    public InvoicesAdapter(List<TransferConfirmData.InneTransferData> data) {
-//        list = data;
-//    }
+    AdapterItemClick adapterItemClick;
+    List<InvoiceModel> obj;
+
+
+    public InvoicesAdapter(InvoicesFragment invoicesFragment, List<InvoiceModel> list) {
+        adapterItemClick = invoicesFragment;
+        obj = list;
+
+    }
 
     @Override
     public InvoicesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,53 +39,52 @@ public class InvoicesAdapter extends RecyclerView.Adapter<InvoicesAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(InvoicesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(InvoicesAdapter.ViewHolder holder, final int position) {
 
-        final TransferConfirmData.InneTransferData innerData = list.get(position);
+        final InvoiceModel data = obj.get(position);
 
-//        holder.tvUCost.setText("1 Fx Coin =  ₹ "+innerData.ucost);
-//        holder.tvTDate.setText("Date: "+innerData.rdate);
-//        holder.tvTName.setText(innerData.tname);
-//        holder.tvCoin.setText(innerData.tcoin);
-//        holder.tvTCost.setText(innerData.tcost);
-//        holder.tvSattus.setText(innerData.status);
+        if (data.InvoiceNumber != null) {
+            holder.tvInvoiceNo.setText(data.InvoiceNumber);
+        }
+        if (data.Date != null) {
+            holder.tvDate.setText(data.Date);
+        }
+        if (data.Amount != null) {
+            holder.tvNetAmount.setText(data.Amount);
+        }
+        if (data.PaymentStaus != null) {
+            holder.tvStatus.setText(data.PaymentStaus);
+        }
+
+        holder.ll1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapterItemClick.OnItemClick(data.InvoiceNumber);
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return 10;
-//        return list.size();
+        return obj.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUCost, tvTDate, tvTName, tvCoin, tvTCost, tvSattus;
+        LinearLayout ll1;
+        TextView tvInvoiceNo, tvDate, tvNetAmount, tvTotalItems, tvStatus;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
-//            tvUCost = itemView.findViewById(R.id.contenttransfer_tv_unitcost);
-//            tvTDate = itemView.findViewById(R.id.contenttransfer_tv_tdate);
-//            tvTName = itemView.findViewById(R.id.contenttransfer_tv_tname);
-//            tvCoin = itemView.findViewById(R.id.contenttransfer_tv_coin);
-//            tvTCost = itemView.findViewById(R.id.contenttransfer_tv_tcost);
-//            tvSattus = itemView.findViewById(R.id.contenttransfer_tv_status);
+            ll1 = itemView.findViewById(R.id.ll1);
+            tvInvoiceNo = itemView.findViewById(R.id.tvInvoiceNo);
+            tvDate = itemView.findViewById(R.id.tvDate);
+            tvNetAmount = itemView.findViewById(R.id.tvNetAmount);
+            tvTotalItems = itemView.findViewById(R.id.tvTotalItems);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
+
         }
     }
 
-    public String parseDateToddMMyyyy(String time) {
-        String inputPattern = "MM dd, YYYY, HH:mm a";
-        String outputPattern = "dd-MMM-yyyy h:mm a";
-        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
-
-        Date date = null;
-        String str = null;
-
-        try {
-            date = inputFormat.parse(time);
-            str = outputFormat.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return str;
-    }
 }

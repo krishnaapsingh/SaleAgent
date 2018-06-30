@@ -8,6 +8,9 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -15,8 +18,6 @@ import com.trio.app.R;
 import com.trio.app.activities.MainActivity;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.models.AchievedModel;
-import com.trio.app.models.FxCoinValue;
-import com.trio.app.models.Login;
 import com.trio.app.models.TargetModel;
 import com.trio.app.rest.ApiClient;
 import com.trio.app.rest.ApiInterface;
@@ -46,6 +47,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 //    private ViewPager viewPager;
     KProgressHUD hud;
     String licenceNo, emailId, year, month;
+    RelativeLayout rlCancel;
+    CardView cvDrop;
+    Animation slide_down, slide_up;
+    long target, achieve;
+    int check=0;
 
     @SuppressLint("ValidFragment")
     public DashboardFragment(MainActivity context) {
@@ -57,7 +63,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
         Calendar c = Calendar.getInstance();
-        year =String.valueOf(c.get(Calendar.YEAR));
+        year = String.valueOf(c.get(Calendar.YEAR));
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
         month = month_date.format(c.getTime());
         licenceNo = SavePref.getLoginData().LicenseNumber;
@@ -65,10 +71,25 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         getView(view);
 
+
         getTargetSale();
-        getAchievedSale();
-//        dataFromSav.ePref();
-//        updateCoinValue();
+
+
+
+        slide_down = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.slide_down);
+
+        slide_up = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.slide_up);
+
+        rlCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cvDrop.startAnimation(slide_up);
+                cvDrop.setVisibility(View.GONE);
+            }
+        });
+
         return view;
     }
 
@@ -82,11 +103,24 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             public void onResponse(Call<AchievedModel> call, Response<AchievedModel> response) {
                 AchievedModel obj = response.body();
                 if (obj.AchievedAmount != null) {
+                    SavePref.saveAchieveSale(obj.AchievedAmount);
                     tvAchievedSale.setText(obj.AchievedAmount);
+                    achieve = Long.parseLong(obj.AchievedAmount);
                 } else {
                     tvAchievedSale.setText("0");
+                    achieve = Long.parseLong(tvAchievedSale.getText().toString().trim());
                 }
                 hud.dismiss();
+
+                if (achieve < target) {
+//                    if (!SavePref.fetchAchieveSale().equalsIgnoreCase(String.valueOf(achieve))){
+                        cvDrop.setVisibility(View.VISIBLE);
+                        cvDrop.startAnimation(slide_down);
+//                    }else {
+//                        cvDrop.setVisibility(View.GONE);
+//                    }
+
+                }
             }
 
             @Override
@@ -107,8 +141,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
                 TargetModel obj = response.body();
                 if (obj.TargetAmount != null) {
                     tvTargetSale.setText(obj.TargetAmount);
+                    target = Long.parseLong(obj.TargetAmount);
+                    getAchievedSale();
+
                 } else {
                     tvTargetSale.setText("0");
+                    target = Long.parseLong(tvTargetSale.getText().toString().trim());
                 }
                 hud.dismiss();
             }
@@ -119,9 +157,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         });
     }
-
-
-
 
 
     public void getView(View view) {
@@ -139,6 +174,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
         tvAchievedSale = view.findViewById(R.id.tvAchievedSale);
         tvTargetSale = view.findViewById(R.id.tvTargetSale);
+
+        cvDrop = view.findViewById(R.id.cvDrop);
+        rlCancel = view.findViewById(R.id.rlCancel);
+        cvDrop.setVisibility(View.GONE);
 
 
         cvDistributors.setOnClickListener(this);

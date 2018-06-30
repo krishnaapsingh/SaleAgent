@@ -10,5 +10,8 @@
     <color name="card_back_ground">#EBEBEB</color>
     <color name="black">#000000</color>
     <color name="red">#f90202</color>
+    <color name="lightred">#c9f90202</color>
     <color name="white">#ffffff</color>
+    <color name="my_color_highlight_press">#FFB6EFEA</color>
+    <color name="my_color_highlight_focus">#CCE99E63</color>
 </resources>

@@ -4,32 +4,21 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.trio.app.activities.MainActivity;
 import com.trio.app.adapters.DistributorsAdapter;
-import com.trio.app.appcontrollers.AppUtility;
 import com.trio.app.R;
 import com.trio.app.appcontrollers.SavePref;
-import com.trio.app.models.AchievedModel;
 import com.trio.app.models.DistributorsModel;
-import com.trio.app.models.FxCoinValue;
-import com.trio.app.models.Login;
-import com.trio.app.models.SaleFxCoin;
 import com.trio.app.rest.ApiClient;
 import com.trio.app.rest.ApiInterface;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -78,9 +67,11 @@ public class DistributorsFragment extends Fragment {
             @Override
             public void onResponse(Call<List<DistributorsModel>> call, Response<List<DistributorsModel>> response) {
                 List<DistributorsModel> obj = response.body();
-               if (obj!=null){
-                adapter = new DistributorsAdapter(obj);
+               if (obj.size()!=0){
+                adapter = new DistributorsAdapter(activity, obj);
                 rvDistributors.setAdapter(adapter);
+               }else {
+                   Toast.makeText(getActivity(), "Distributors not found", Toast.LENGTH_SHORT).show();
                }
                 hud.dismiss();
             }

@@ -65,6 +65,9 @@
                    android:singleLine="true"
                    android:textSize="@dimen/medium_text"
                    android:hint="Enter ID"
+                   android:imeOptions="actionNext"
+                   android:nextFocusDown="@+id/etPassword"
+                   android:inputType="textEmailAddress"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content" />
 
@@ -81,6 +84,8 @@
                    android:inputType="textPassword"
                    android:id="@+id/etPassword"
                    android:maxLines="1"
+                   android:singleLine="true"
+                   android:imeOptions="actionDone"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:hint="Enter Password"

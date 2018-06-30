@@ -1,11 +1,11 @@
 package com.trio.app.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +17,10 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.orhanobut.hawk.Hawk;
 import com.trio.app.R;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.fragments.DashboardFragment;
@@ -26,8 +30,6 @@ import com.trio.app.fragments.ProfileFragment;
 import com.trio.app.fragments.ReportsFragment;
 import com.trio.app.fragments.RoutesFragment;
 import com.trio.app.fragments.ShopsFragment;
-import com.trio.app.fragments.TransferCoinFragment;
-import com.trio.app.models.Login;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -39,10 +41,10 @@ public class MainActivity extends AppCompatActivity
     FrameLayout flContainer;
     DrawerLayout drawer;
     String title;
-    Login login;
+    private boolean inBackground = false;
+    boolean checkBackground = false;
 
-
-
+//    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         flContainer = findViewById(R.id.fl_container);
         setSupportActionBar(toolbar);
-
 
         getView();
 
@@ -64,14 +65,69 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         CircleImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.nav_iv_profile);
-//        Login object = SavePref.getLoginData();
+        Glide.with(MainActivity.this)
+                .load(SavePref.getLoginData().UserPic)
+                .centerCrop()
+                .placeholder(R.drawable.profile1)
+                .error(R.drawable.profile1)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .priority(Priority.HIGH)
+                .into(imageView);
 
         TextView name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.usrname);
         TextView usremail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.usremail);
-        name.setText(SavePref.getUserName());
+        name.setText(SavePref.getLoginData().UserName);
+        usremail.setText(SavePref.getLoginData().EmailID);
 
-//        usremail.setText(object.data.username);
+    }
 
+    @Override
+    public void onResume() {
+        inBackground = false;
+
+        if (checkBackground) {
+            alertDialogForSessionTimeOut();
+        }
+        super.onResume();
+    }
+
+    private void alertDialogForSessionTimeOut() {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                .setTitle("Sesion timeout ")
+                .setMessage("Oops !!! Your session has been expired. You have to re-login");
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (alert.isShowing()) {
+                    alert.dismiss();
+                    Hawk.deleteAll();
+                    SavePref.saveLogin(false);
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    MainActivity.this.finish();
+                }
+            }
+        }, 2000);
+
+    }
+
+    @Override
+    public void onPause() {
+        inBackground = true;
+        new CountDownTimer(300000, 1000) {
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                if (inBackground) {
+                    checkBackground = true;
+                }
+            }
+        }.start();
+        super.onPause();
     }
 
     private void getView() {
@@ -86,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         } else if (check == 0) {
             exitByBackKey();
         } else {
-            toolbar.setTitle("DashBoard");
+            toolbar.setTitle("Sales Agent");
             Fragment fragment = new DashboardFragment(this);
             check = 0;
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
@@ -140,18 +196,13 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_invoices:
-//                title = "Invoices";
-////                fragment = new ReportsFragment(this);
-//                tag = ReportsFragment.TAG;
-//                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
-//                check = 1;
-////                fragmmentTrans(fragment, tag);
-
+                check = 1;
+                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
                 break;
             case R.id.nav_reports:
                 title = "Reports";
                 fragment = new ReportsFragment(this);
-                tag = TransferCoinFragment.TAG;
+                tag = ReportsFragment.TAG;
                 check = 1;
                 fragmmentTrans(fragment, tag);
 
@@ -164,9 +215,17 @@ public class MainActivity extends AppCompatActivity
                 fragmmentTrans(fragment, tag);
 
                 break;
+
+            case R.id.nav_logout:
+                logoutAlertDialog();
+//                Hawk.deleteAll();
+//                check = 1;
+//                fragmmentTrans(fragment, tag);
+
+                break;
             default:
                 fragment = new DashboardFragment(this);
-                title = "Dashboard";
+                title = "Sales Agent";
                 tag = DashboardFragment.TAG;
                 check = 0;
                 fragmmentTrans(fragment, tag);
@@ -175,6 +234,21 @@ public class MainActivity extends AppCompatActivity
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logoutAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Do you want to logout application?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Hawk.deleteAll();
+                        SavePref.saveLogin(false);
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        MainActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     public void fragmmentTrans(Fragment fragment, String tag) {
@@ -190,6 +264,16 @@ public class MainActivity extends AppCompatActivity
         String tag;
         Fragment fragment = null;
         switch (id) {
+            case 0:
+                title = "Sales Agent";
+                fragment = new DashboardFragment(this);
+                tag = DashboardFragment.TAG;
+                check = 0;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_container, fragment, tag)
+                        .commit();
+                toolbar.setTitle(title);
+                break;
             case 1:
                 title = "Distributors";
                 fragment = new DistributorsFragment(this);
@@ -198,6 +282,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
+                toolbar.setTitle(title);
                 break;
             case 2:
                 title = "Routes";
@@ -207,6 +292,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
+                toolbar.setTitle(title);
                 break;
             case 3:
                 title = "Shops";
@@ -216,15 +302,11 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
-
+                toolbar.setTitle(title);
                 break;
             case 4:
-                title = "Invoices ";
-//                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
-////                fragment = new InvoicesFragment(this);
-//                tag = InvoicesFragment.TAG;
-//                check = 1;
-
+                check = 1;
+                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
                 break;
             case 5:
                 title = "Reports";
@@ -234,6 +316,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
+                toolbar.setTitle(title);
 
                 break;
             case 6:
@@ -244,19 +327,21 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
+                toolbar.setTitle(title);
                 break;
             default:
-                title = "Dashboard";
+                title = "Sales Agent";
                 fragment = new DashboardFragment(this);
                 tag = DashboardFragment.TAG;
                 check = 0;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
                         .commit();
+                toolbar.setTitle(title);
                 break;
         }
 
-        toolbar.setTitle(title);
+
     }
 
 
