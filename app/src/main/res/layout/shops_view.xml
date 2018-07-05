@@ -2,8 +2,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     android:layout_marginBottom="5dp"
+    android:id="@+id/cvShops"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
     android:padding="5dp"
@@ -22,9 +23,10 @@
             android:layout_weight=".3">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/ivImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
 
@@ -46,25 +48,44 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/medium_text" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <TextView
+                <LinearLayout
+                    android:layout_marginRight="55dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Owner Name : "
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text" />
+                    android:layout_alignParentLeft="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Owner: "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
 
-                <TextView
-                    android:id="@+id/tvOwnerName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text" />
-            </LinearLayout>
+                    <TextView
+                        android:maxLines="1"
+                        android:id="@+id/tvOwnerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/btnInvoice"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
+                    android:layout_width="50dp"
+                    android:textSize="@dimen/small_text"
+                    android:textAllCaps="false"
+                    android:layout_height="18dp"
+                    android:text="Invoice"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,6 +100,7 @@
                     android:textSize="@dimen/medium_text" />
 
                 <TextView
+                    android:maxLines="1"
                     android:id="@+id/tvMobile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,6 +109,7 @@
             </LinearLayout>
 
             <TextView
+                android:maxLines="1"
                 android:id="@+id/tvRouteName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,6 +119,7 @@
                 android:textSize="@dimen/medium_text" />
 
             <TextView
+                android:maxLines="1"
                 android:id="@+id/tvAreaName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +130,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="18dp">
 
                 <TextView
                     android:id="@+id/tvCity"
@@ -114,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:minLines="1"
                     android:text="Delhi"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/medium_text" />
 

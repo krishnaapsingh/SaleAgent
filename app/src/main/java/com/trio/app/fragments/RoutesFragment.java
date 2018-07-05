@@ -100,7 +100,7 @@ public class RoutesFragment extends Fragment {
             public void onResponse(Call<List<RouteModel>> call, Response<List<RouteModel>> response) {
                 List<RouteModel> obj = response.body();
                 if (obj.size()!=0){
-                    adapter = new RouteAdapter(obj);
+                    adapter = new RouteAdapter(activity, obj);
                     rvRoute.setAdapter(adapter);
                 }else {
                     Toast.makeText(getActivity(), "Route not found ", Toast.LENGTH_SHORT).show();

@@ -69,6 +69,12 @@ public class ShopsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getShopsList();
+    }
+
     private void getShopsList() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;

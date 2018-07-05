@@ -21,6 +21,8 @@
             android:orientation="vertical">
 
             <TextView
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:id="@+id/tvStoreName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,6 +31,7 @@
                 android:textSize="@dimen/medium_text" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tvDateAdded"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last Invoice"
+                android:text="Contact No"
                 android:textColor="@color/black_overlay"
                 android:textSize="@dimen/small_text" />
 

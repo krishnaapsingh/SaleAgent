@@ -49,7 +49,7 @@ public class InvoicesActivity extends AppCompatActivity {
     TextView tvShopName;
     List<ShopModel> obj = new ArrayList<>();
     String shopid1="";
-    String shopid;
+    String shopid="";
     //    RecyclerView recyclerView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -77,11 +77,25 @@ public class InvoicesActivity extends AppCompatActivity {
         hud = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setDimAmount(0.5f);
-
-        getShopsList();
-
-
+        tvShopName = findViewById(R.id.tvShopName);
+        rlShopChange = findViewById(R.id.rlShopChange);
         fab = findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
+
+        String check = getIntent().getStringExtra("check");
+        if (check.equalsIgnoreCase("0")){
+            getShopsList();
+        }else {
+            fab.setVisibility(View.VISIBLE);
+            rlShopChange.setVisibility(View.INVISIBLE);
+            tvShopName.setText(getIntent().getStringExtra("shopname"));
+            SavePref.saveShopName(getIntent().getStringExtra("shopname"));
+            shopid = getIntent().getStringExtra("shopid");
+            SavePref.saveShopId(shopid);
+            getInvoiceList();
+
+        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,8 +107,7 @@ public class InvoicesActivity extends AppCompatActivity {
         rlViewPager.setVisibility(View.GONE);
         cvNotFound.setVisibility(View.GONE);
 
-        tvShopName = findViewById(R.id.tvShopName);
-        rlShopChange = findViewById(R.id.rlShopChange);
+
         rlShopChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,53 +144,6 @@ public class InvoicesActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    public void onResume() {
-//        inBackground = false;
-//
-//        if (checkBackground) {
-//            alertDialogForSessionTimeOut();
-//        }
-//        super.onResume();
-//    }
-//
-//    private void alertDialogForSessionTimeOut() {
-//
-//        final android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(this)
-//                .setTitle("Sesion timeout ")
-//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-//        final android.app.AlertDialog alert = dialog.create();
-//        alert.show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (alert.isShowing()) {
-//                    alert.dismiss();
-//                    Hawk.deleteAll();
-//                    startActivity(new Intent(InvoicesActivity.this, LoginActivity.class));
-//                    InvoicesActivity.this.finish();
-//                }
-//            }
-//        }, 2000);
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        inBackground = true;
-//        new CountDownTimer(300000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            public void onFinish() {
-//                if (inBackground) {
-//                    checkBackground = true;
-//                }
-//            }
-//        }.start();
-//        super.onPause();
-//    }
 
     private void getInvoiceList() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
@@ -250,11 +216,13 @@ public class InvoicesActivity extends AppCompatActivity {
         builder.setSingleChoiceItems(array, -1, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int item) {
+                fab.setVisibility(View.VISIBLE);
                 route = routeList.get(item);
                 SavePref.saveShopName(route);
                 SavePref.saveRoute(obj.get(item).Route);
                 SavePref.saveShopAddress(obj.get(item).AreaName+" "+obj.get(item).CityName+" "+obj.get(item).StateName);
                 shopid = obj.get(item).ID;
+                SavePref.saveShopId(shopid);
                 alertDialog1.dismiss();
                 tvShopName.setText(route);
                 if (!shopid1.equalsIgnoreCase(shopid)){
@@ -269,25 +237,36 @@ public class InvoicesActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!shopid.equalsIgnoreCase("")){
+            getInvoiceList();
+        }
+    }
+
+    @Override
     public void onBackPressed() {
 //        startActivity(new Intent(InvoicesActivity.this, MainActivity.class));
         InvoicesActivity.this.finish();
     }
 
     private void setupViewPager(ViewPager viewPager, List<InvoiceModel> obj) {
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        invoicesFragment.list = obj;
 
 //        if (obj.size()!=0) {
 
             for (int i = 0; i < catNameList.size(); i++) {
                 if (i == 0) {
-                    invoicesFragment = new InvoicesFragment(obj, InvoicesActivity.this);
+                    invoicesFragment = new InvoicesFragment (InvoicesActivity.this);
+                    invoicesFragment.list = obj;
                     adapter.addFragment(invoicesFragment, catNameList.get(i));
                 } else if (i == 1) {
-                    invoicesFragment = new InvoicesFragment(obj, InvoicesActivity.this);
+                    invoicesFragment = new InvoicesFragment( InvoicesActivity.this);
                     adapter.addFragment(invoicesFragment, catNameList.get(i));
                 } else {
-                    invoicesFragment = new InvoicesFragment(obj, InvoicesActivity.this);
+                    invoicesFragment = new InvoicesFragment(InvoicesActivity.this);
                     adapter.addFragment(invoicesFragment, catNameList.get(i));
                 }
             }

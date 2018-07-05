@@ -52,4 +52,21 @@ public class SavePref {
     public static boolean getIsUserLogin() {
         return Hawk.get("login", false);
     }
+
+
+    public static void saveShopId(String shopid) {
+        Hawk.put("shopid", shopid);
+    }
+
+    public static String fetchShopId() {
+        return Hawk.get("shopid","");
+    }
+
+    public static void saveDistributorId(String id) {
+        Hawk.put("disId", id);
+    }
+    public static String fetchDistributorId() {
+        return Hawk.get("disId", null);
+    }
+
 }

@@ -266,6 +266,12 @@
                 android:text="Add Photo"
                 android:textColor="@color/black"
                 android:textSize="@dimen/medium_text" />
+            <TextView
+                android:id="@+id/tvSelected"
+                android:text="Image Selected"
+                android:textSize="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
@@ -288,6 +294,12 @@
                 android:text="Add Items"
                 android:textColor="@color/black"
                 android:textSize="@dimen/medium_text" />
+            <TextView
+                android:visibility="invisible"
+                android:text="Selected"
+                android:textSize="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
@@ -297,6 +309,7 @@
         android:background="@color/colorPrimary" />
 
     <LinearLayout
+        android:id="@+id/llInvoice"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
@@ -309,19 +322,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="Invoice No. 12345"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Invoice No: "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
+
+                <TextView
+                    android:id="@+id/tvInvoiceNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
+            </LinearLayout>
 
             <TextView
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="Date 29/5/2018"
                 android:textColor="@color/black"
                 android:textSize="@dimen/medium_text" />
         </RelativeLayout>
@@ -339,10 +364,10 @@
                 android:textSize="@dimen/large_text" />
 
             <TextView
+                android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="150000"
                 android:textColor="@color/black"
                 android:textSize="@dimen/large_text" />
         </RelativeLayout>
@@ -359,19 +384,33 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="120 items"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/small_text" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvTotalItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="Items"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/small_text" />
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/rl"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

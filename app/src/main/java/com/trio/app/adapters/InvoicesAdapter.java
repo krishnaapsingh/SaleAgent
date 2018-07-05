@@ -12,6 +12,7 @@ import com.trio.app.appcontrollers.AdapterItemClick;
 import com.trio.app.fragments.InvoicesFragment;
 import com.trio.app.models.InvoiceModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
 public class InvoicesAdapter extends RecyclerView.Adapter<InvoicesAdapter.ViewHolder> {
 
     AdapterItemClick adapterItemClick;
-    List<InvoiceModel> obj;
+    List<InvoiceModel> obj = new ArrayList<>();
 
 
     public InvoicesAdapter(InvoicesFragment invoicesFragment, List<InvoiceModel> list) {

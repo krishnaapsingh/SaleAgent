@@ -19,6 +19,7 @@ import com.trio.app.adapters.InvoicesAdapter;
 import com.trio.app.appcontrollers.AdapterItemClick;
 import com.trio.app.models.InvoiceModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,21 +29,24 @@ import java.util.List;
 
 
 @SuppressLint("ValidFragment")
-public class InvoicesFragment extends Fragment implements AdapterItemClick{
+public class InvoicesFragment extends Fragment implements AdapterItemClick {
 
     public static final String TAG = InvoicesFragment.class.getSimpleName();
     RecyclerView recyclerView;
     InvoicesAdapter adapter;
     InvoicesActivity activity;
-    List<InvoiceModel> list;
+    public static List<InvoiceModel> list = new ArrayList<>();
 
     @SuppressLint("ValidFragment")
-    public InvoicesFragment(List<InvoiceModel> obj, InvoicesActivity invoicesActivity) {
-       list = obj;
-       activity = invoicesActivity;
-
+    public InvoicesFragment(InvoicesActivity invoicesActivity) {
+//        list = obj;
+        activity = invoicesActivity;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -52,12 +56,17 @@ public class InvoicesFragment extends Fragment implements AdapterItemClick{
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new InvoicesAdapter(this, list);
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
+        setAdapter();
+
+
         return view;
     }
 
+    private void setAdapter() {
+        adapter = new InvoicesAdapter(this, list);
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
+    }
 
     @Override
     public void OnItemClick(String position) {

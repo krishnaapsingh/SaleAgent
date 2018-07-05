@@ -2,6 +2,7 @@ package com.trio.app.rest;
 
 
 import com.trio.app.models.AchievedModel;
+import com.trio.app.models.CreateInvoiceModel;
 import com.trio.app.models.DistributorStockModel;
 import com.trio.app.models.DistributorsModel;
 import com.trio.app.models.InvoiceDetailModel;
@@ -71,6 +72,9 @@ public interface ApiInterface {
 
     @GET
     Call<List<InvoiceDetailModel>> getInvoiceDetails(@Url String url);
+
+    @GET
+    Call<CreateInvoiceModel> createInvoice(@Url String url);
 }
 
 

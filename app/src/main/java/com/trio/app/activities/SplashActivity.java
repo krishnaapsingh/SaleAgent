@@ -8,10 +8,23 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 import com.trio.app.R;
+import com.trio.app.adapters.DistributorStockAdapter;
+import com.trio.app.adapters.DistributorsAdapter;
 import com.trio.app.appcontrollers.SavePref;
+import com.trio.app.models.DistributorStockModel;
+import com.trio.app.models.DistributorsModel;
+import com.trio.app.rest.ApiClient;
+import com.trio.app.rest.ApiInterface;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -41,21 +54,8 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(i);
                     SplashActivity.this.finish();
                 }
-
-
-
             }
         }, 2000);
 
     }
-
-
-
-
-
-
-
-
-
-
 }

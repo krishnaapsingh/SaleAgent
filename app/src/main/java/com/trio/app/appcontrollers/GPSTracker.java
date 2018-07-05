@@ -31,39 +31,32 @@ import java.util.Locale;
 
 public class GPSTracker extends Service implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
     private final Context mContext;
-
+    // Declaring a Location Manager
+    protected LocationManager locationManager;
     // flag for GPS status
     boolean isGPSEnabled = false;
-
     // flag for network status
     boolean isNetworkEnabled = false;
     boolean isWiFiEnabled = false;
     // flag for GPS status
     boolean canGetLocation = false;
-
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
     String StateName, CityName, CountryName, LocalAddress, Throughfare, Subthroughfare;
     int i;
-    private static final int PERMISSION_REQUEST_CODE = 1;
     String[] PermissionsLocation =
             {
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION
             };
     private View mLayout;
-
-
-    // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
-
-    // Declaring a Location Manager
-    protected LocationManager locationManager;
 
     public GPSTracker(Context mContext) {
         this.mContext = mContext;
@@ -76,6 +69,7 @@ public class GPSTracker extends Service implements LocationListener, ActivityCom
                     .getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
+            assert locationManager != null;
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 //
@@ -170,28 +164,39 @@ public class GPSTracker extends Service implements LocationListener, ActivityCom
 
 
     public void get_LocationDetails() {
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                MIN_TIME_BW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        Log.d("Network", "Network");
-        if (locationManager != null) {
-            location = locationManager
-                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (location != null) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(mContext,android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED
+                    && ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+                return;
+            }
+            else {
+                locationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                Log.d("Network", "Network");
+                if (locationManager != null) {
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                }
+            }
+        } else {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            Log.d("Network", "Network");
+            if (locationManager != null) {
+                location = locationManager
+                        .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
             }
         }
     }
@@ -242,7 +247,7 @@ public class GPSTracker extends Service implements LocationListener, ActivityCom
             Geocoder geocoder;
             List<Address> addresses;
             geocoder = new Geocoder(mContext, Locale.getDefault());
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(),1);
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             Log.e("ADDRESSES IN GEOCODER =", String.valueOf(addresses));
             if (addresses != null && addresses.size() > 0) {
 

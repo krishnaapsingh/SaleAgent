@@ -27,8 +27,16 @@ import com.trio.app.fragments.ProfileFragment;
 import com.trio.app.fragments.ReportsFragment;
 import com.trio.app.fragments.RoutesFragment;
 import com.trio.app.fragments.ShopsFragment;
+import com.trio.app.models.DistributorsModel;
+import com.trio.app.rest.ApiClient;
+import com.trio.app.rest.ApiInterface;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -47,19 +55,21 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         flContainer = findViewById(R.id.fl_container);
         setSupportActionBar(toolbar);
 
+        getDistributorsList();
+
         getView();
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         CircleImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.nav_iv_profile);
         Glide.with(MainActivity.this)
@@ -71,11 +81,33 @@ public class MainActivity extends AppCompatActivity
                 .priority(Priority.HIGH)
                 .into(imageView);
 
-        TextView name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.usrname);
-        TextView usremail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.usremail);
+        TextView name = navigationView.getHeaderView(0).findViewById(R.id.usrname);
+        TextView usremail = navigationView.getHeaderView(0).findViewById(R.id.usremail);
         name.setText(SavePref.getLoginData().UserName);
         usremail.setText(SavePref.getLoginData().EmailID);
 
+    }
+
+    private void getDistributorsList() {
+        String licenceNo = SavePref.getLoginData().LicenseNumber;
+        String emailId = SavePref.getLoginData().EmailID;
+        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&&"+emailId;
+        ApiInterface apiInterface = ApiClient.getClient();
+        Call<List<DistributorsModel>> call = apiInterface.getDistributors(url);
+        call.enqueue(new Callback<List<DistributorsModel>>() {
+            @Override
+            public void onResponse(Call<List<DistributorsModel>> call, Response<List<DistributorsModel>> response) {
+                List<DistributorsModel> obj = response.body();
+                if (obj.size()!=0){
+                    SavePref.saveDistributorId(obj.get(0).ID);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<DistributorsModel>> call, Throwable t) {
+            }
+        });
     }
 
 //    @Override
@@ -132,7 +164,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (check == 0) {
@@ -192,8 +224,10 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_invoices:
-                check = 1;
-                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
+                check = 0;
+                Intent i = new Intent(MainActivity.this, InvoicesActivity.class);
+                i.putExtra("check", "0");
+                startActivity(i);
                 break;
             case R.id.nav_reports:
                 title = "Reports";
@@ -280,8 +314,10 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(title);
                 break;
             case 4:
-                check = 1;
-                startActivity(new Intent(MainActivity.this, InvoicesActivity.class));
+                check = 0;
+                Intent i1 = new Intent(MainActivity.this, InvoicesActivity.class);
+                i1.putExtra("check", "0");
+                startActivity(i1);
                 break;
             case 5:
                 title = "Reports";

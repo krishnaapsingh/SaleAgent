@@ -98,7 +98,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getAchievedSale() {
-        hud.show();
         String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeAchieved&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<AchievedModel> call = apiInterface.getUserAchieved(url);
@@ -113,7 +112,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     tvAchievedSale.setText("0");
                     achieve = Long.parseLong(tvAchievedSale.getText().toString().trim());
                 }
-                hud.dismiss();
 
                 if (achieve < target) {
 //                    if (!SavePref.fetchAchieveSale().equalsIgnoreCase(String.valueOf(achieve))){
@@ -134,7 +132,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getTargetSale() {
-        hud.show();
         String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeTarget&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<TargetModel> call = apiInterface.getUserTarget(url);
@@ -145,13 +142,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 if (obj.TargetAmount != null) {
                     tvTargetSale.setText(obj.TargetAmount);
                     target = Long.parseLong(obj.TargetAmount);
-                    getAchievedSale();
+
 
                 } else {
                     tvTargetSale.setText("0");
                     target = Long.parseLong(tvTargetSale.getText().toString().trim());
                 }
-                hud.dismiss();
+                getAchievedSale();
             }
 
             @Override

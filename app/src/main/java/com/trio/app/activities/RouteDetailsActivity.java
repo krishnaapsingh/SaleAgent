@@ -6,17 +6,31 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.orhanobut.hawk.Hawk;
 import com.trio.app.R;
 import com.trio.app.adapters.RouteDetailsAdapter;
+import com.trio.app.adapters.ShopsAdapter;
 import com.trio.app.appcontrollers.SavePref;
+import com.trio.app.models.ShopModel;
+import com.trio.app.rest.ApiClient;
+import com.trio.app.rest.ApiInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RouteDetailsActivity extends AppCompatActivity {
 
@@ -28,6 +42,8 @@ public class RouteDetailsActivity extends AppCompatActivity {
     Toolbar toolbar;
     private boolean inBackground = false;
     boolean checkBackground = false;
+    String routeName;
+    KProgressHUD hud;
 
 
     @Override
@@ -35,67 +51,62 @@ public class RouteDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_details);
 
+        routeName = getIntent().getStringExtra("routename");
         toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.backarrow));
-        toolbar.setTitle("Route Detail");
+        toolbar.setTitle(routeName);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                startActivity(new Intent(InvoicesActivity.this, MainActivity.class));
-//                InvoicesActivity.this.finish();
+                RouteDetailsActivity.this.finish();
             }
         });
+        hud = KProgressHUD.create(this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setDimAmount(0.5f);
         tvShopCount = findViewById(R.id.tvShopCount);
         tvFilterName = findViewById(R.id.tvFilterName);
         spnFilter = findViewById(R.id.spnFilter);
         rvShop = findViewById(R.id.rvShop);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvShop.setLayoutManager(mLayoutManager);
         llFilter = findViewById(R.id.llFilter);
+        getShopsList();
     }
 
-//    @Override
-//    public void onResume() {
-//        inBackground = false;
-//
-//        if (checkBackground) {
-//            alertDialogForSessionTimeOut();
-//        }
-//        super.onResume();
-//    }
-//
-//    private void alertDialogForSessionTimeOut() {
-//
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-//                .setTitle("Sesion timeout ")
-//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (alert.isShowing()) {
-//                    alert.dismiss();
-//                    Hawk.deleteAll();
-//                    startActivity(new Intent(RouteDetailsActivity.this, LoginActivity.class));
-//                    RouteDetailsActivity.this.finish();
-//                }
-//            }
-//        }, 2000);
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        inBackground = true;
-//        new CountDownTimer(300000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//            }
-//            public void onFinish() {
-//                if (inBackground) {
-//                    checkBackground = true;
-//                }
-//            }
-//        }.start();
-//        super.onPause();
-//    }
+
+    private void getShopsList() {
+        String licenceNo = SavePref.getLoginData().LicenseNumber;
+        String emailId = SavePref.getLoginData().EmailID;
+        hud.show();
+        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+        ApiInterface apiInterface = ApiClient.getClient();
+        Call<List<ShopModel>> call = apiInterface.getShopsList(url);
+        call.enqueue(new Callback<List<ShopModel>>() {
+            @Override
+            public void onResponse(Call<List<ShopModel>> call, Response<List<ShopModel>> response) {
+                List<ShopModel> obj = response.body();
+                List<ShopModel> obj1 = new ArrayList<>();
+                if (obj.size()!=0){
+                   for (int i=0; i<obj.size(); i++){
+                       if (obj.get(i).Route.equalsIgnoreCase(routeName)){
+                           obj1.add(obj.get(i));
+                       }
+                   }
+                   tvShopCount.setText(obj1.size()+" "+"Shops");
+                   adapter = new RouteDetailsAdapter(RouteDetailsActivity.this, obj1);
+                   rvShop.setAdapter(adapter);
+                }else {
+                    Toast.makeText(RouteDetailsActivity.this, "Distributors not found", Toast.LENGTH_SHORT).show();
+                }
+                hud.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<List<ShopModel>> call, Throwable t) {
+                hud.dismiss();
+            }
+        });
+    }
 }

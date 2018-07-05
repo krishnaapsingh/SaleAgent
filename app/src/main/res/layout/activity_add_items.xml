@@ -19,7 +19,7 @@
             app:titleTextColor="@color/white" />
 
         <RelativeLayout
-            android:id="@+id/rlAddItems"
+            android:id="@+id/rlCreateInvoice"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:layout_alignParentRight="true"

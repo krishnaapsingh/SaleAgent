@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.trio.app.R;
-import com.trio.app.activities.AddItemsActivity;
 import com.trio.app.activities.AddShopActivity;
-import com.trio.app.appcontrollers.SavePref;
+import com.trio.app.activities.CreateInvoiceActivity;
 import com.trio.app.models.DistributorStockModel;
 
 import java.util.List;
@@ -19,13 +18,13 @@ import java.util.List;
  * Created by trio on 15/6/18.
  */
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewLayout> {
+public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> {
     Context mContext;
     List<DistributorStockModel> list;
     int itemCount = 1;
     int productPrice = 1;
 
-    public ItemAdapter(List<DistributorStockModel> obj) {
+    public ItemAdapter1(List<DistributorStockModel> obj) {
 //        mContext = addItemsActivity;
         list = obj;
     }
@@ -51,8 +50,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewLayout> {
 //        holder.tvMinus.setVisibility(View.GONE);
         holder.tvCount.setText("1");
 //        holder.tvTotalPrice.setText(productPrice);
-        AddShopActivity.totalPrice= String.valueOf(productPrice);
-        AddShopActivity.totalItems= String.valueOf("1");
+//        CreateInvoiceActivity.totalPrice= String.valueOf(productPrice);
+        CreateInvoiceActivity.quantity= String.valueOf("1");
+        CreateInvoiceActivity.productName = data.Product;
 
         holder.tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +65,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewLayout> {
                 }
                 holder.tvCount.setText(String.valueOf(itemCount));
                 holder.tvTotalPrice.setText(String.valueOf(productPrice * itemCount));
-                AddShopActivity.totalPrice= String.valueOf(productPrice * itemCount);
-                AddShopActivity.totalItems= String.valueOf(itemCount);
+                CreateInvoiceActivity.quantity= String.valueOf(itemCount);
+//                CreateInvoiceActivity.productName = data.Product;
 
             }
         });
@@ -83,8 +83,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewLayout> {
                 }
                 holder.tvCount.setText(String.valueOf(itemCount));
                 holder.tvTotalPrice.setText(String.valueOf(productPrice * itemCount));
-                AddShopActivity.totalPrice= String.valueOf(productPrice * itemCount);
-                AddShopActivity.totalItems= String.valueOf(itemCount);
+                CreateInvoiceActivity.quantity= String.valueOf(itemCount);
+//                CreateInvoiceActivity.productName = data.Product;
 
             }
         });

@@ -1,11 +1,14 @@
 package com.trio.app.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trio.app.R;
+import com.trio.app.activities.InvoicesActivity;
+import com.trio.app.activities.MainActivity;
 import com.trio.app.appcontrollers.SavePref;
 import com.trio.app.models.ShopModel;
 
@@ -40,7 +45,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
     }
 
     @Override
-    public void onBindViewHolder(MyLayout holder, int position) {
+    public void onBindViewHolder(MyLayout holder, final int position) {
 
         if (list.get(position).Shop != null) {
             holder.tvShopName.setText(list.get(position).Shop);
@@ -66,6 +71,17 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
         if (list.get(position).StateName != null) {
             holder.tvState.setText(list.get(position).StateName);
         }
+        holder.btnInvoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, InvoicesActivity.class);
+                i.putExtra("shopname", list.get(position).Shop);
+                i.putExtra("check", "1");
+                i.putExtra("shopid", list.get(position).ID);
+                mContext.startActivity(i);
+            }
+        });
+
 //        if (list.get(position).Pictur != null) {
             Glide.with(mContext).load(list.get(position).Picture).into(holder.ivImage);
 
@@ -79,6 +95,8 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
 
     public class MyLayout extends RecyclerView.ViewHolder {
         ImageView ivImage;
+        CardView cvShops;
+        Button btnInvoice;
         TextView tvShopName, tvOwnerName, tvMobile, tvRouteName, tvAreaName, tvCity, tvState;
 
         public MyLayout(View itemView) {
@@ -91,6 +109,8 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
             tvCity = itemView.findViewById(R.id.tvCity);
             tvState = itemView.findViewById(R.id.tvState);
             ivImage = itemView.findViewById(R.id.ivImage);
+            cvShops = itemView.findViewById(R.id.cvShops);
+            btnInvoice = itemView.findViewById(R.id.btnInvoice);
         }
     }
 }

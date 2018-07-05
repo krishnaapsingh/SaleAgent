@@ -1,5 +1,6 @@
 package com.trio.app.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.trio.app.R;
+import com.trio.app.activities.RouteDetailsActivity;
+import com.trio.app.models.ShopModel;
+
+import java.util.List;
 
 /**
  * Created by trio on 25/6/18.
@@ -14,23 +19,34 @@ import com.trio.app.R;
 
 public class RouteDetailsAdapter extends RecyclerView.Adapter<RouteDetailsAdapter.MyView>{
 
+    Context context;
+    List<ShopModel> list;
 
-
+    public RouteDetailsAdapter(RouteDetailsActivity routeDetailsActivity, List<ShopModel> obj1) {
+        context = routeDetailsActivity;
+        list = obj1;
+    }
 
     @Override
     public MyView onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_view, parent, false);
-        return null;
+        return new MyView(view);
     }
 
     @Override
     public void onBindViewHolder(MyView holder, int position) {
-
+        ShopModel data = list.get(position);
+        if (data.Shop!=null){
+            holder.tvStoreName.setText(data.Shop);
+        }
+        if (data.Contact!=null){
+            holder.tvAmount.setText(data.Contact);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return list.size();
     }
 
     public class MyView extends RecyclerView.ViewHolder {
