@@ -7,6 +7,7 @@ package com.trio.app.models;
 public class InvoiceDetailModel {
 
     public String InvoiceNumber;
+    public String OrderNumber;
     public String Product;
     public String Rate;
     public String Qty;

@@ -2,12 +2,15 @@ package com.trio.app.rest;
 
 
 import com.trio.app.models.AchievedModel;
+import com.trio.app.models.AgentsModel;
 import com.trio.app.models.CreateInvoiceModel;
 import com.trio.app.models.DistributorStockModel;
 import com.trio.app.models.DistributorsModel;
 import com.trio.app.models.InvoiceDetailModel;
 import com.trio.app.models.InvoiceModel;
 import com.trio.app.models.LoginModel;
+import com.trio.app.models.PaymentDetailsModel;
+import com.trio.app.models.ReportModel;
 import com.trio.app.models.RouteModel;
 import com.trio.app.models.ShopCreated;
 import com.trio.app.models.ShopModel;
@@ -75,6 +78,24 @@ public interface ApiInterface {
 
     @GET
     Call<CreateInvoiceModel> createInvoice(@Url String url);
+
+    @GET
+    Call<List<ReportModel>> getReport(@Url String url);
+
+    @GET
+    Call<ShopCreated> addPayment(@Url String url);
+
+    @GET
+    Call<List<PaymentDetailsModel>> getPaymentDetails(@Url String url);
+
+    @GET
+    Call<List<AgentsModel>> getAgents(@Url String url);
+
+    @GET
+    Call<List<DistributorStockModel>> getStock(@Url String url);
+
+    @GET
+    Call<List<InvoiceModel>> getOrderList(@Url String url);
 }
 
 

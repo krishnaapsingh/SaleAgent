@@ -38,10 +38,13 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.trio.app.BuildConfig;
 import com.trio.app.R;
+import com.trio.app.adapters.ShopsAdapter;
 import com.trio.app.appcontrollers.GPSTracker;
 import com.trio.app.appcontrollers.ImageFilePath;
 import com.trio.app.appcontrollers.SavePref;
+import com.trio.app.models.InvoiceModel;
 import com.trio.app.models.RouteModel;
+import com.trio.app.models.ShopModel;
 import com.trio.app.rest.ApiClient;
 import com.trio.app.rest.ApiInterface;
 
@@ -73,6 +76,7 @@ public class AddShopActivity extends AppCompatActivity {
     public static String totalPrice = "0";
     public static String totalItems = "0";
     public static String invoiceno = "0";
+    public static String completeInvoice = "0";
     Toolbar toolbar;
     KProgressHUD hud;
     String userChoosenTask;
@@ -95,18 +99,18 @@ public class AddShopActivity extends AppCompatActivity {
     Double lattitude;
     Double longitude;
     LinearLayout llInvoice;
-    TextView tvInvoiceNo, tvDate, tvTotalPrice, tvTotalItems;
+    TextView tvInvoiceNo, tvDate, tvTotalPrice, tvStatus;
     String cDate;
-    int click=0;
+    int click = 0;
     private boolean inBackground = false;
     Bitmap myBitmap;
     Uri picUri;
     TextView tvSelected;
+    String complete="0";
+    String userType = SavePref.getLoginData().UserType;
+    Spinner spnShopType;
+    String shopType="";
 
-
-    private ArrayList<String> permissionsToRequest;
-    private ArrayList<String> permissionsRejected = new ArrayList<>();
-    private ArrayList<String> permissions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +126,8 @@ public class AddShopActivity extends AppCompatActivity {
                 AddShopActivity.this.finish();
             }
         });
+
+        spnShopType = findViewById(R.id.spnShopType);
         tvRouteName = findViewById(R.id.tvRouteName);
         tvRouteChange = findViewById(R.id.tvRouteChange);
         etShopName = findViewById(R.id.etShopName);
@@ -134,32 +140,37 @@ public class AddShopActivity extends AppCompatActivity {
         tvInvoiceNo = findViewById(R.id.tvInvoiceNo);
         tvDate = findViewById(R.id.tvDate);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
-        tvTotalItems = findViewById(R.id.tvTotalItems);
+        tvStatus = findViewById(R.id.tvStatus);
         llInvoice.setVisibility(View.GONE);
         tvMonth = findViewById(R.id.tvMonth);
         llSpn = findViewById(R.id.llSpn);
         spnMonth = findViewById(R.id.spnMonth);
         tvSelected = findViewById(R.id.tvSelected);
         tvSelected.setVisibility(View.INVISIBLE);
+//        if (getIntent().getStringExtra("check").equalsIgnoreCase("1")){
+//            ArrayList<String> list= getIntent().getExtras().getStringArrayList("data");
+//            setValues(list.get(0), list.get(1), list.get(2));
+//        }
 
         totalPrice = "0";
         totalItems = "0";
         invoiceno = "0";
 
         getCurrentDate();
-        getInvoiceNo();
+//        getInvoiceNo();
 
-        llSpn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spnMonth.performClick();
-            }
-        });
+//        spnShopType.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                spnMonth.performClick();
+//            }
+//        });
 
-        spnMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spnShopType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                tvMonth.setText(parent.getItemAtPosition(position).toString());
+//                tvMonth.setText(parent.getItemAtPosition(position).toString());
+                shopType = parent.getItemAtPosition(position).toString();
 
             }
 
@@ -178,30 +189,48 @@ public class AddShopActivity extends AppCompatActivity {
         rlAddShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validation() == 0) {
+
                     try {
-                        if (click!=0){
-                            createShop();
+                        if (complete.equals("0")){
+                            if (validation() == 0) {
+
+                                createShop();
+                            }
                         }else {
-                            Toast.makeText(AddShopActivity.this, "Please Add Items", Toast.LENGTH_SHORT).show();
+                            hud.show();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    complete = "0";
+                                    hud.dismiss();
+                                    AddShopActivity.this.finish();
+                                }
+                            },1000);
                         }
+
+
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                }
+
             }
         });
 
         llAddItems.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validation() == 0) {
-                    click++;
-                    Intent i = new Intent(AddShopActivity.this, AddItemsActivity.class);
-                    i.putExtra("shopname", etShopName.getText().toString().trim());
-                    startActivity(i);
-                }
+
+                    if (click != 0) {
+                        Intent i = new Intent(AddShopActivity.this, CreateInvoiceActivity.class);
+                        i.putExtra("shopname", etShopName.getText().toString().trim());
+                        i.putExtra("actname", "AddShop");
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(AddShopActivity.this, "Please Add Shop First", Toast.LENGTH_SHORT).show();
+                    }
+
+
             }
         });
 
@@ -222,10 +251,21 @@ public class AddShopActivity extends AppCompatActivity {
 
     }
 
-    private void getInvoiceNo() {
-        Random r = new Random(System.currentTimeMillis());
-        invoiceno = String.valueOf(10000 + r.nextInt(20000));
-    }
+//    private void setValues(String shop, String owner, String contact) {
+//
+//        etShopName.setText(shop);
+//        etOwnerName.setText(owner);
+//        etMobile.setText(contact);
+//
+//        etShopName.setEnabled(false);
+//        etOwnerName.setEnabled(false);
+//        etMobile.setEnabled(false);
+//    }
+
+//    private void getInvoiceNo() {
+//        Random r = new Random(System.currentTimeMillis());
+//        invoiceno = String.valueOf(10000 + r.nextInt(20000));
+//    }
 
     private void getCurrentDate() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -268,13 +308,53 @@ public class AddShopActivity extends AppCompatActivity {
                 gps.showSettingsAlert();
             }
         }
-        if (!totalPrice.equalsIgnoreCase("0")) {
-            llInvoice.setVisibility(View.VISIBLE);
-            tvInvoiceNo.setText(invoiceno);
-            tvDate.setText(cDate);
-            tvTotalItems.setText(totalItems);
-            tvTotalPrice.setText(totalPrice);
+        if (!completeInvoice.equalsIgnoreCase("0")) {
+
+            getInvoiceList();
         }
+
+    }
+
+    private void getInvoiceList() {
+        String licenceNo = SavePref.getLoginData().LicenseNumber;
+        String emailId = SavePref.getLoginData().EmailID;
+        String shopid = SavePref.fetchShopId();
+        hud.show();
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listAllInvoice&&"+licenceNo+"&&"+shopid;
+        }
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
+        ApiInterface apiInterface = ApiClient.getClient();
+        Call<List<InvoiceModel>> call = apiInterface.getInvoiceList(url);
+        call.enqueue(new Callback<List<InvoiceModel>>() {
+            @Override
+            public void onResponse(Call<List<InvoiceModel>> call, Response<List<InvoiceModel>> response) {
+                List<InvoiceModel> obj = response.body();
+                if (obj.size() != 0) {
+                    llInvoice.setVisibility(View.VISIBLE);
+                    tvInvoiceNo.setText(obj.get(0).InvoiceNumber);
+                    tvDate.setText(obj.get(0).Date);
+                    tvStatus.setText(obj.get(0).PaymentStaus);
+                    tvTotalPrice.setText(obj.get(0).Amount);
+                    complete ="1";
+                    completeInvoice="0";
+
+                    rlAddShop.setVisibility(View.VISIBLE);
+                    rlAddShop.setEnabled(true);
+                }
+
+                hud.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<List<InvoiceModel>> call, Throwable t) {
+                hud.dismiss();
+            }
+        });
     }
 
 
@@ -284,10 +364,17 @@ public class AddShopActivity extends AppCompatActivity {
     }
 
     private void getRouteList() {
+
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedRoute&&" + licenceNo + "&&" + emailId;
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedRoute&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getRoute&&"+licenceNo;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<RouteModel>> call = apiInterface.getRoutes(url);
         call.enqueue(new Callback<List<RouteModel>>() {
@@ -335,6 +422,7 @@ public class AddShopActivity extends AppCompatActivity {
         data.put("Lat", lattitude);
         data.put("Long", longitude);
         data.put("Picture", myFile);
+        data.put("Type", shopType);
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.post("http://manage.bytepaper.com/Mobile/Manufacturing/index.php", data, new TextHttpResponseHandler() {
@@ -349,14 +437,53 @@ public class AddShopActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 try {
                     JSONObject object = new JSONObject(responseString);
-                    if (object.getString("Status").equalsIgnoreCase("Shop Created")) {
-                        AddShopActivity.this.finish();
+                    if (object.getString("Status").contains("Shop Created")) {
+//                        AddShopActivity.this.finish();
+                        click++;
+                        rlAddShop.setVisibility(View.INVISIBLE);
+                        rlAddShop.setEnabled(false);
+
+                        etMobile.setText("");
+                        tvSelected.setVisibility(View.INVISIBLE);
+                        getShopsList();
                         Toast.makeText(AddShopActivity.this, "Shop Created Successfully", Toast.LENGTH_SHORT).show();
 
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                hud.dismiss();
+            }
+        });
+    }
+
+    private void getShopsList() {
+        String licenceNo = SavePref.getLoginData().LicenseNumber;
+        String emailId = SavePref.getLoginData().EmailID;
+        hud.show();
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?AllshopList&&"+licenceNo;
+        }
+
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&" + licenceNo + "&&" + emailId;
+        ApiInterface apiInterface = ApiClient.getClient();
+        Call<List<ShopModel>> call = apiInterface.getShopsList(url);
+        call.enqueue(new Callback<List<ShopModel>>() {
+            @Override
+            public void onResponse(Call<List<ShopModel>> call, Response<List<ShopModel>> response) {
+                List<ShopModel> obj = response.body();
+                if (obj.size() != 0) {
+                    SavePref.saveShopId(obj.get(obj.size() - 1).ID);
+                }
+                hud.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<List<ShopModel>> call, Throwable t) {
                 hud.dismiss();
             }
         });
@@ -388,6 +515,11 @@ public class AddShopActivity extends AppCompatActivity {
         } else if (etMobile.getText().toString().length() <= 9) {
             etMobile.setError("enter correct shop owner contact number");
             Toast.makeText(this, "enter correct shop owner contact number", Toast.LENGTH_SHORT).show();
+            check++;
+        }
+        if (myFile==null){
+//            tvSelected.setError("please select image");
+            Toast.makeText(this, "please select image", Toast.LENGTH_SHORT).show();
             check++;
         }
         return check;
@@ -488,109 +620,12 @@ public class AddShopActivity extends AppCompatActivity {
         return outputFileUri;
     }
 
-    private void selectImage() {
-
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
-                "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder((this));
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-//                boolean result = AppUtility.checkPermission(UploadDocumentActivity.this);
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    cameraIntent();
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask = "Choose from Library";
-                    galleryIntent();
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void cameraIntent() {
-
-//        Intent CamIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//        cameraFile = new File(Environment.getExternalStorageDirectory(),
-//                "file" + String.valueOf(System.currentTimeMillis()) + ".jpeg");
-//        myFile = cameraFile;
-//        uri = FileProvider.getUriForFile(this,
-//                BuildConfig.APPLICATION_ID + ".provider",
-//                cameraFile);
-//        CamIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-//        CamIntent.putExtra("return-data", true);
-//        startActivityForResult(CamIntent, REQUEST_CAMERA);
-        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
-            //Create a file to store the image
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            if (photoFile != null) {
-                uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoFile);
-                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                pictureIntent.putExtra( android.provider.MediaStore.EXTRA_SIZE_LIMIT, "720000");
-                startActivityForResult(pictureIntent,
-                        REQUEST_CAMERA);
-            }
-        }
-    }
+    String imageFilePath;
 
 
-String imageFilePath;
-    private File createImageFile() throws IOException {
-        String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss",
-                        Locale.getDefault()).format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
-        File storageDir =
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        imageFilePath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void galleryIntent() {
-
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Bitmap bitmap = null;
-//
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == SELECT_FILE) {
-//                onSelectFromGalleryResult(data);
-//            } else if (requestCode == REQUEST_CAMERA) {
-//                try {
-//                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    onCaptureImageResult(bitmap);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         Bitmap bitmap;
         if (resultCode == Activity.RESULT_OK) {
 
@@ -603,14 +638,14 @@ String imageFilePath;
 
                 try {
                     myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), picUri);
-                    if (myBitmap!=null) {
+                    if (myBitmap != null) {
                         myBitmap = rotateImageIfRequired(myBitmap, picUri);
                         myBitmap = getResizedBitmap(myBitmap, 500);
                         onCaptureImageResult(myBitmap);
                         tvSelected.setTextColor(this.getResources().getColor(R.color.black));
                         tvSelected.setText("Image Selected");
 
-                    }else {
+                    } else {
                         tvSelected.setTextColor(this.getResources().getColor(R.color.red));
                         tvSelected.setText("Image Error");
                     }
@@ -646,7 +681,8 @@ String imageFilePath;
     private void changeBitmapToFile(Bitmap myBitmap) throws IOException {
         Bitmap thumbnailC = myBitmap;
         myFile = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpeg");
-        myFile.createNewFile();    }
+        myFile.createNewFile();
+    }
 
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
@@ -694,7 +730,7 @@ String imageFilePath;
 
     private void onSelectFromGalleryResult(Intent data) {
         Uri selectedImage = data.getData();
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
         Cursor cursor = getContentResolver().query(selectedImage,
                 filePathColumn, null, null, null);
@@ -718,7 +754,7 @@ String imageFilePath;
         myFile = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpeg");
         myFile.createNewFile();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        thumbnailC.compress(Bitmap.CompressFormat.PNG,50, bos);
+        thumbnailC.compress(Bitmap.CompressFormat.PNG, 50, bos);
         byte[] bitmapData = bos.toByteArray();
         FileOutputStream fos = new FileOutputStream(myFile);
         fos.write(bitmapData);

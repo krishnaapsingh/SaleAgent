@@ -3,8 +3,6 @@ package com.trio.app.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,12 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
-import com.orhanobut.hawk.Hawk;
 import com.trio.app.R;
 import com.trio.app.adapters.ViewPagerAdapter;
 import com.trio.app.appcontrollers.SavePref;
@@ -57,6 +55,9 @@ public class InvoicesActivity extends AppCompatActivity {
     CardView cvNotFound;
     private boolean inBackground = false;
     boolean checkBackground = false;
+    String shopName="";
+    String userType;
+    LinearLayout rlHeader;
 
 
     @Override
@@ -77,20 +78,37 @@ public class InvoicesActivity extends AppCompatActivity {
         hud = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setDimAmount(0.5f);
+        userType = SavePref.getLoginData().UserType;
+        tvShopName = findViewById(R.id.tvShopName);
         tvShopName = findViewById(R.id.tvShopName);
         rlShopChange = findViewById(R.id.rlShopChange);
+        rlHeader = findViewById(R.id.rlHeader);
+        rlHeader.setVisibility(View.GONE);
         fab = findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
+        if (!userType.equalsIgnoreCase("Distributor")){
+            rlHeader.setVisibility(View.VISIBLE);
+        }
+
         String check = getIntent().getStringExtra("check");
         if (check.equalsIgnoreCase("0")){
-            getShopsList();
-        }else {
-            fab.setVisibility(View.VISIBLE);
+            if (userType.equalsIgnoreCase("Distributor")){
+                getDistributorInvoice();
+                rlShopChange.setVisibility(View.INVISIBLE);
+            }else {
+                getShopsList();
+            }
+
+        }else if (check.equalsIgnoreCase("1")){
+            if (!userType.equalsIgnoreCase("Admin")){
+                fab.setVisibility(View.VISIBLE);
+            }
             rlShopChange.setVisibility(View.INVISIBLE);
             tvShopName.setText(getIntent().getStringExtra("shopname"));
-            SavePref.saveShopName(getIntent().getStringExtra("shopname"));
+            route = (getIntent().getStringExtra("shopname"));
             shopid = getIntent().getStringExtra("shopid");
+            SavePref.saveShopName(route);
             SavePref.saveShopId(shopid);
             getInvoiceList();
 
@@ -99,7 +117,10 @@ public class InvoicesActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(InvoicesActivity.this, CreateInvoiceActivity.class));
+                Intent intent = new Intent(InvoicesActivity.this, CreateInvoiceActivity.class);
+                intent.putExtra("shopname", route);
+                intent.putExtra("actname", "InvoiceActivity");
+                startActivity(intent);
             }
         });
         rlViewPager = findViewById(R.id.rlViewPager);
@@ -144,12 +165,13 @@ public class InvoicesActivity extends AppCompatActivity {
 
     }
 
-
-    private void getInvoiceList() {
+    private void getDistributorInvoice() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
+        String url="http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listDistributorInvoice&&"+licenceNo+"&&"+emailId;
+
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<InvoiceModel>> call = apiInterface.getInvoiceList(url);
         call.enqueue(new Callback<List<InvoiceModel>>() {
@@ -178,11 +200,63 @@ public class InvoicesActivity extends AppCompatActivity {
         });
     }
 
+
+    private void getInvoiceList() {
+
+        String licenceNo = SavePref.getLoginData().LicenseNumber;
+        String emailId = SavePref.getLoginData().EmailID;
+        hud.show();
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listAllInvoice&&"+licenceNo+"&&"+shopid;
+        }
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?listInvoice&&" + licenceNo + "&&" + emailId + "&&" + shopid;
+        ApiInterface apiInterface = ApiClient.getClient();
+        Call<List<InvoiceModel>> call = apiInterface.getInvoiceList(url);
+        call.enqueue(new Callback<List<InvoiceModel>>() {
+            @Override
+            public void onResponse(Call<List<InvoiceModel>> call, Response<List<InvoiceModel>> response) {
+                List<InvoiceModel> obj = response.body();
+                if (obj.size() != 0) {
+                    rlViewPager.setVisibility(View.VISIBLE);
+                    cvNotFound.setVisibility(View.GONE);
+                    setupViewPager(viewPager, obj);
+                } else {
+                    cvNotFound.setVisibility(View.VISIBLE);
+                    rlViewPager.setVisibility(View.GONE);
+                    obj.clear();
+//                    setupViewPager(viewPager, obj);
+                    Toast.makeText(InvoicesActivity.this, "Invoices not found for this shop", Toast.LENGTH_SHORT).show();
+                }
+
+                hud.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<List<InvoiceModel>> call, Throwable t) {
+                cvNotFound.setVisibility(View.VISIBLE);
+                rlViewPager.setVisibility(View.GONE);
+                hud.dismiss();
+            }
+        });
+    }
+
     private void getShopsList() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&" + licenceNo + "&&" + emailId;
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?AllshopList&&"+licenceNo;
+        }
+
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&" + licenceNo + "&&" + emailId;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<ShopModel>> call = apiInterface.getShopsList(url);
         call.enqueue(new Callback<List<ShopModel>>() {
@@ -211,12 +285,15 @@ public class InvoicesActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(InvoicesActivity.this);
 
-        builder.setTitle("Select Your Route");
+        builder.setTitle("Select Your Invoice");
 
         builder.setSingleChoiceItems(array, -1, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int item) {
-                fab.setVisibility(View.VISIBLE);
+                if (!userType.equalsIgnoreCase("Admin")){
+                    fab.setVisibility(View.VISIBLE);
+                }
+
                 route = routeList.get(item);
                 SavePref.saveShopName(route);
                 SavePref.saveRoute(obj.get(item).Route);
@@ -253,27 +330,39 @@ public class InvoicesActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager, List<InvoiceModel> obj) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        invoicesFragment.list = obj;
-
-//        if (obj.size()!=0) {
+//        invoicesFragment.list = obj;
+        InvoicesFragment.list = obj;
+        InvoicesFragment.list1=listShort(obj);
+        InvoicesFragment.list2=listShort1(obj);
 
             for (int i = 0; i < catNameList.size(); i++) {
-                if (i == 0) {
-                    invoicesFragment = new InvoicesFragment (InvoicesActivity.this);
-                    invoicesFragment.list = obj;
+                    invoicesFragment = new InvoicesFragment (InvoicesActivity.this, i);
                     adapter.addFragment(invoicesFragment, catNameList.get(i));
-                } else if (i == 1) {
-                    invoicesFragment = new InvoicesFragment( InvoicesActivity.this);
-                    adapter.addFragment(invoicesFragment, catNameList.get(i));
-                } else {
-                    invoicesFragment = new InvoicesFragment(InvoicesActivity.this);
-                    adapter.addFragment(invoicesFragment, catNameList.get(i));
-                }
+
             }
             if (obj.size()!=0) {
                 viewPager.setAdapter(adapter);
             }
-//        }
 
+    }
+
+    public List<InvoiceModel> listShort(List<InvoiceModel> obj) {
+        List<InvoiceModel> obj1 = new ArrayList<>();
+        for (int i=0; i< obj.size(); i++){
+            if (obj.get(i).PaymentStaus.equalsIgnoreCase("Paid")){
+                obj1.add(obj.get(i));
+            }
+        }
+        return obj1;
+    }
+
+    public List<InvoiceModel> listShort1(List<InvoiceModel> obj) {
+        List<InvoiceModel> obj1 = new ArrayList<>();
+        for (int i=0; i< obj.size(); i++){
+            if (obj.get(i).PaymentStaus.equalsIgnoreCase("Outstanding")){
+                obj1.add(obj.get(i));
+            }
+        }
+        return obj1;
     }
 }

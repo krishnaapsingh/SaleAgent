@@ -42,6 +42,7 @@ public class ShopsFragment extends Fragment {
     RecyclerView.LayoutManager manager;
     KProgressHUD hud;
     ShopsAdapter adapter;
+    String userType = SavePref.getLoginData().UserType;
 
     @SuppressLint("ValidFragment")
     public ShopsFragment(MainActivity context) {
@@ -54,6 +55,10 @@ public class ShopsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_shops, container, false);
         rvShops = view.findViewById(R.id.rvShops);
         fabCreateShop = view.findViewById(R.id.fabCreateShop);
+        fabCreateShop.setVisibility(View.GONE);
+        if (!userType.equalsIgnoreCase("Admin")){
+            fabCreateShop.setVisibility(View.VISIBLE);
+        }
         manager = new LinearLayoutManager(getActivity());
         rvShops.setLayoutManager(manager);
         hud = KProgressHUD.create(getActivity())
@@ -76,10 +81,18 @@ public class ShopsFragment extends Fragment {
     }
 
     private void getShopsList() {
+
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?AllshopList&&"+licenceNo;
+        }
+
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<ShopModel>> call = apiInterface.getShopsList(url);
         call.enqueue(new Callback<List<ShopModel>>() {
@@ -90,7 +103,7 @@ public class ShopsFragment extends Fragment {
                     adapter = new ShopsAdapter(getActivity(), obj);
                     rvShops.setAdapter(adapter);
                 }else {
-                    Toast.makeText(getActivity(), "Distributors not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Shops not found", Toast.LENGTH_SHORT).show();
                 }
                 hud.dismiss();
             }

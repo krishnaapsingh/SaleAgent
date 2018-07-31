@@ -9,6 +9,18 @@
             android:icon="@drawable/home"
             android:title="Home" />
         <item
+            android:id="@+id/nav_stock"
+            android:icon="@drawable/stock"
+            android:title="Stock" />
+        <item
+            android:id="@+id/nav_order"
+            android:icon="@drawable/order"
+            android:title="Order" />
+        <item
+            android:id="@+id/nav_team"
+            android:icon="@drawable/team"
+            android:title="Team" />
+        <item
             android:id="@+id/nav_distri"
             android:icon="@drawable/distributors"
             android:title="Distributors" />

@@ -34,7 +34,7 @@
 
                         <android.support.v7.widget.CardView
                             android:layout_width="120dp"
-                            android:layout_height="120dp"
+                            android:layout_height="130dp"
                             android:layout_centerInParent="true"
                             app:cardCornerRadius="5dp"
                             app:cardElevation="10dp">
@@ -46,8 +46,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:padding="5dp"
                                     android:src="@drawable/target" />
 
@@ -56,15 +56,39 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:text="Target Sale"
-                                    android:textColor="@color/colorAccent" />
+                                    android:textColor="@color/black" />
 
                                 <TextView
-                                    android:id="@+id/tvTargetSale"
+                                    android:text=""
+                                    android:id="@+id/tvTargetNo"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
-                                    android:textColor="@color/colorAccent"
+                                    android:textColor="@color/black"
                                     android:textSize="@dimen/large_text" />
+
+                               <LinearLayout
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="wrap_content">
+                                   <TextView
+                                       android:text="₹"
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
+                                       android:layout_gravity="center_horizontal"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/large_text" />
+                                   <TextView
+                                       android:text=""
+                                       android:id="@+id/tvTargetSale"
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
+                                       android:layout_gravity="center_horizontal"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/large_text" />
+                               </LinearLayout>
+
+
+
                             </LinearLayout>
                         </android.support.v7.widget.CardView>
                     </RelativeLayout>
@@ -76,7 +100,7 @@
 
                         <android.support.v7.widget.CardView
                             android:layout_width="120dp"
-                            android:layout_height="120dp"
+                            android:layout_height="130dp"
                             android:layout_centerInParent="true"
                             app:cardCornerRadius="5dp"
                             app:cardElevation="10dp">
@@ -88,8 +112,8 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
                                     android:padding="5dp"
                                     android:src="@drawable/achieved" />
 
@@ -101,12 +125,35 @@
                                     android:textColor="@color/colorAccent" />
 
                                 <TextView
-                                    android:id="@+id/tvAchievedSale"
+                                    android:id="@+id/tvAchievedNo"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:textColor="@color/colorAccent"
                                     android:textSize="@dimen/large_text" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:text="₹"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="@dimen/large_text" />
+
+                                    <TextView
+                                        android:id="@+id/tvAchievedSale"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_horizontal"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="@dimen/large_text" />
+
+                                </LinearLayout>
+
+
                             </LinearLayout>
                         </android.support.v7.widget.CardView>
                     </RelativeLayout>
@@ -127,7 +174,6 @@
                     android:id="@+id/rlDrop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lightred"
                     android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="0dp"
@@ -151,9 +197,9 @@
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/tvComment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Loser! You are behind your set target"
                         android:textColor="@color/white"
                         android:textSize="@dimen/small_text" />
                 </RelativeLayout>
@@ -170,7 +216,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey"
+                android:background="@color/grey1"
                 android:orientation="vertical"
                 android:weightSum="3">
 
@@ -424,6 +470,8 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:saveEnabled="false"
+        android:visibility="gone"
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

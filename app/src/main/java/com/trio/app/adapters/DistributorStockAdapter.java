@@ -36,8 +36,10 @@ public class DistributorStockAdapter extends RecyclerView.Adapter<DistributorSto
             holder.tvProductName.setText(data.Product);
         }
         if (data.Stock != null) {
-            holder.tvStock.setText(data.Stock);
-//            holder.tvStock1.setText(data.Stock);
+            holder.tvStock1.setText(data.Stock);
+        }
+        if (data.Unit != null) {
+            holder.tvStock.setText(data.Unit);
         }
 
 

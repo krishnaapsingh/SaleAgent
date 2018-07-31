@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_margin="2dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -24,7 +25,7 @@
                     android:id="@+id/tvProductName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="kjfdkjfdk"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/medium_text" />
                 <TextView
@@ -39,13 +40,14 @@
                     android:id="@+id/tvRate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/medium_text" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -80,7 +82,7 @@
                     android:id="@+id/tvAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3000"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/small_text" />
             </LinearLayout>
@@ -105,7 +107,7 @@
 
 
                 <TextView
-                    android:text="5"
+                    android:text=""
                     android:id="@+id/tvStock"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

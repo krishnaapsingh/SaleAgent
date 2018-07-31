@@ -7,4 +7,5 @@ package com.trio.app.models;
 public class CreateInvoiceModel {
     public String Status;
     public String InvoiceNumber;
+    public String OrderNumber;
 }

@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -36,6 +38,8 @@ public class DistributorStockActivity extends AppCompatActivity {
     KProgressHUD hud;
     DistributorStockAdapter adapter;
     RecyclerView rvItems;
+    TextView tvShopCount;
+    LinearLayout llMain;
     private boolean inBackground = false;
     private boolean checkBackground = false;
     @Override
@@ -55,6 +59,10 @@ public class DistributorStockActivity extends AppCompatActivity {
         hud = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setDimAmount(0.5f);
+
+        llMain = findViewById(R.id.llMain);
+        llMain.setVisibility(View.GONE);
+        tvShopCount = findViewById(R.id.tvShopCount);
         rvItems = findViewById(R.id.rvItems);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvItems.setLayoutManager(mLayoutManager);
@@ -62,58 +70,12 @@ public class DistributorStockActivity extends AppCompatActivity {
         getDistributorStock();
     }
 
-//    @Override
-//    public void onResume() {
-//        inBackground = false;
-//
-//        if (checkBackground) {
-//            alertDialogForSessionTimeOut();
-//        }
-//        super.onResume();
-//    }
-//
-//    private void alertDialogForSessionTimeOut() {
-//
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-//                .setTitle("Sesion timeout ")
-//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (alert.isShowing()) {
-//                    alert.dismiss();
-//                    Hawk.deleteAll();
-//                    startActivity(new Intent(DistributorStockActivity.this, LoginActivity.class));
-//                    DistributorStockActivity.this.finish();
-//                }
-//            }
-//        }, 2000);
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        inBackground = true;
-//        new CountDownTimer(300000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            public void onFinish() {
-//                if (inBackground) {
-//                    checkBackground = true;
-//                }
-//            }
-//        }.start();
-//        super.onPause();
-//    }
 
     private void getDistributorStock() {
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
+
         String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getDistributorStock&&"+licenceNo+"&&"+ID;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<DistributorStockModel>> call = apiInterface.getDistributorStock(url);
@@ -122,8 +84,12 @@ public class DistributorStockActivity extends AppCompatActivity {
             public void onResponse(Call<List<DistributorStockModel>> call, Response<List<DistributorStockModel>> response) {
                 List<DistributorStockModel> obj = response.body();
                 if (obj.size()!=0){
+                    llMain.setVisibility(View.VISIBLE);
                     adapter = new DistributorStockAdapter(obj);
                     rvItems.setAdapter(adapter);
+                    ItemCount(obj);
+                }else {
+                    Toast.makeText(DistributorStockActivity.this, "Distributor's Stock is Empty", Toast.LENGTH_SHORT).show();
                 }
                 hud.dismiss();
             }
@@ -133,5 +99,16 @@ public class DistributorStockActivity extends AppCompatActivity {
                 hud.dismiss();
             }
         });
+    }
+
+    private void ItemCount(List<DistributorStockModel> obj) {
+        int item=0;
+        int total=0;
+        for (int i =0;i<obj.size(); i++){
+            item = Integer.parseInt(obj.get(i).Stock);
+            total = item+total;
+        }
+        String value = "Total Items count "+String.valueOf(total);
+        tvShopCount.setText(value);
     }
 }

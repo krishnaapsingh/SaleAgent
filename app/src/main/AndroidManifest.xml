@@ -21,8 +21,12 @@
         android:theme="@style/AppTheme">
 
         <!-- <activity android:name="com.trio.app.activities.LoginActivity" /> -->
-        <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait">
@@ -44,12 +48,28 @@
         </provider>
 
         <activity android:name=".activities.InvoicesActivity" />
-        <activity android:name=".activities.AddShopActivity" />
-        <activity android:name=".activities.AddItemsActivity" />
-        <activity android:name=".activities.RouteDetailsActivity" />
-        <activity android:name=".activities.InvoiceItemsActivity" />
-        <activity android:name=".activities.DistributorStockActivity" />
-        <activity android:name=".activities.CreateInvoiceActivity"></activity>
+        <activity
+            android:name=".activities.AddShopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.AddItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.RouteDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.InvoiceItemsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.DistributorStockActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.CreateInvoiceActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.DateWiseReportActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.OrderActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

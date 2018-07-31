@@ -57,10 +57,17 @@ public class DistributorsFragment extends Fragment {
     }
 
     private void getDistributorsList() {
+        String userType = SavePref.getLoginData().UserType;
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&&"+emailId;
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+             url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+             url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getDsitributor&&"+licenceNo;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<DistributorsModel>> call = apiInterface.getDistributors(url);
         call.enqueue(new Callback<List<DistributorsModel>>() {

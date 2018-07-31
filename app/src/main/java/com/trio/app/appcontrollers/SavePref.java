@@ -21,13 +21,7 @@ public class SavePref {
         Hawk.put("Login_Data", loginObj);
     }
 
-    public static void saveShopName(String shopname) {
-        Hawk.put("shopname", shopname);
-    }
 
-    public static String fetchShopName() {
-        return Hawk.get("shopname", "");
-    }
 
     public static void saveRoute(String route) {
         Hawk.put("routename", route);
@@ -69,4 +63,19 @@ public class SavePref {
         return Hawk.get("disId", null);
     }
 
+    public static void saveShopName(String route) {
+        Hawk.put("shopname", route);
+    }
+
+    public static String fetchShopName() {
+        return Hawk.get("shopname", "");
+    }
+
+
+    public static void saveActName(String order) {
+        Hawk.put("actnamee", order);
+    }
+    public static String getActName() {
+        return Hawk.get("actnamee");
+    }
 }

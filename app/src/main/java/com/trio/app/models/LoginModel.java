@@ -13,4 +13,5 @@ public class LoginModel {
     public String contactnum;
     public String DataVisibility;
     public String UserType;
+    public String ID;
 }

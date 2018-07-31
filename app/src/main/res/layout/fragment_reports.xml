@@ -3,17 +3,135 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Select report as: "
+            android:textColor="@color/black"
+            android:textSize="@dimen/medium_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/btnMonthly"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/blue_outbox"
+                android:fontFamily="@font/roboto_regular"
+                android:padding="5dp"
+                android:text="Monthly"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/btnDaily"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:background="@drawable/blue_outbox"
+                android:fontFamily="@font/roboto_regular"
+                android:padding="5dp"
+                android:text="Daily"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:id="@+id/rlSelectMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Month and Year"
+            android:textColor="@color/black"
+            android:textSize="@dimen/medium_text" />
+
+        <LinearLayout
+            android:background="@drawable/blue_outbox"
+
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/llSpn"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:text="MM/YYYY"
+                    android:id="@+id/tvMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/small_text" />
+
+
+
+                <!--<Spinner-->
+                <!--android:id="@+id/spnMonth"-->
+                <!--android:layout_width="12dp"-->
+                <!--android:layout_height="12dp"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:background="@drawable/arrowdown"-->
+                <!--android:entries="@array/month" />-->
+            </LinearLayout>
+            <TextView
+                android:padding="3.8dp"
+                android:id="@+id/tvOk"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Ok"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorPrimary" />
 
 
     <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
-        android:scrollbars="vertical"
         android:id="@+id/sale_cnf_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"/>
+        android:paddingTop="2dp"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

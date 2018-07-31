@@ -9,6 +9,8 @@ public class DistributorStockModel {
     public String Mobile;
     public String Email;
     public String Product;
+    public String Price;
     public String Stock;
     public String Unit;
+    public String quantity;
 }

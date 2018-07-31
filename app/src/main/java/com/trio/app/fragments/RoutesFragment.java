@@ -46,6 +46,7 @@ public class RoutesFragment extends Fragment {
     RecyclerView rvRoute;
     KProgressHUD hud;
     RouteAdapter adapter;
+    LinearLayout llMain;
 
 
     @SuppressLint("ValidFragment")
@@ -60,6 +61,8 @@ public class RoutesFragment extends Fragment {
         spnMonth = view.findViewById(R.id.spnMonth);
         rvRoute = view.findViewById(R.id.rvRoute);
         llSpn = view.findViewById(R.id.llSpn);
+        llMain = view.findViewById(R.id.llMain);
+        llMain.setVisibility(View.GONE);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         rvRoute.setLayoutManager(manager);
         hud = KProgressHUD.create(getActivity())
@@ -89,10 +92,17 @@ public class RoutesFragment extends Fragment {
     }
 
     private void getRouteList() {
+        String userType = SavePref.getLoginData().UserType;
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedRoute&&"+licenceNo+"&&"+emailId;
+        String url="";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedRoute&&"+licenceNo+"&&"+emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getRoute&&"+licenceNo;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<RouteModel>> call = apiInterface.getRoutes(url);
         call.enqueue(new Callback<List<RouteModel>>() {
@@ -102,6 +112,7 @@ public class RoutesFragment extends Fragment {
                 if (obj.size()!=0){
                     adapter = new RouteAdapter(activity, obj);
                     rvRoute.setAdapter(adapter);
+                    llMain.setVisibility(View.VISIBLE);
                 }else {
                     Toast.makeText(getActivity(), "Route not found ", Toast.LENGTH_SHORT).show();
                 }

@@ -27,9 +27,17 @@
     <string name="newpass">New Password</string>
     <string name="cnfrmpass">Confirm Password</string>
     <string name="transfer">Transfer</string>
+    <string name="total_amount">Total Amount :</string>
+    <string name="total_qunatity">Total Qunatity :</string>
+    <string name="shoptname">Select Shop Type</string>
     <string-array name="array_status">
         <item>pending</item>
         <item>confirm</item>
+    </string-array>
+
+    <string-array name="shop_type">
+        <item>Retailer</item>
+        <item>WholeSeller</item>
     </string-array>
 
     <string-array name="month">

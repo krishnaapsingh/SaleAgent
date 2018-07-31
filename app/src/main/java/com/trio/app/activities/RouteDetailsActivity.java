@@ -44,7 +44,7 @@ public class RouteDetailsActivity extends AppCompatActivity {
     boolean checkBackground = false;
     String routeName;
     KProgressHUD hud;
-
+    LinearLayout llMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,8 @@ public class RouteDetailsActivity extends AppCompatActivity {
         hud = KProgressHUD.create(this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setDimAmount(0.5f);
+        llMain = findViewById(R.id.llMain);
+        llMain.setVisibility(View.GONE);
         tvShopCount = findViewById(R.id.tvShopCount);
         tvFilterName = findViewById(R.id.tvFilterName);
         spnFilter = findViewById(R.id.spnFilter);
@@ -77,10 +79,19 @@ public class RouteDetailsActivity extends AppCompatActivity {
 
 
     private void getShopsList() {
+        String userType = SavePref.getLoginData().UserType;
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
         hud.show();
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
+        String url = "";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&" + licenceNo + "&&" + emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?AllshopList&&" + licenceNo;
+        }
+
+//        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?shopList&&"+licenceNo+"&&"+emailId;
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<ShopModel>> call = apiInterface.getShopsList(url);
         call.enqueue(new Callback<List<ShopModel>>() {
@@ -88,17 +99,18 @@ public class RouteDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<List<ShopModel>> call, Response<List<ShopModel>> response) {
                 List<ShopModel> obj = response.body();
                 List<ShopModel> obj1 = new ArrayList<>();
-                if (obj.size()!=0){
-                   for (int i=0; i<obj.size(); i++){
-                       if (obj.get(i).Route.equalsIgnoreCase(routeName)){
-                           obj1.add(obj.get(i));
-                       }
-                   }
-                   tvShopCount.setText(obj1.size()+" "+"Shops");
-                   adapter = new RouteDetailsAdapter(RouteDetailsActivity.this, obj1);
-                   rvShop.setAdapter(adapter);
-                }else {
-                    Toast.makeText(RouteDetailsActivity.this, "Distributors not found", Toast.LENGTH_SHORT).show();
+                if (obj.size() != 0) {
+                    for (int i = 0; i < obj.size(); i++) {
+                        if (obj.get(i).Route.equalsIgnoreCase(routeName)) {
+                            obj1.add(obj.get(i));
+                        }
+                    }
+                    llMain.setVisibility(View.VISIBLE);
+                    tvShopCount.setText(obj1.size() + " " + "Shops");
+                    adapter = new RouteDetailsAdapter(RouteDetailsActivity.this, obj1);
+                    rvShop.setAdapter(adapter);
+                } else {
+                    Toast.makeText(RouteDetailsActivity.this, "Shops not found", Toast.LENGTH_SHORT).show();
                 }
                 hud.dismiss();
             }

@@ -7,10 +7,13 @@
     <color name="yellow">#E8AC30</color>
     <color name="primary_light">#FF485E74</color>
     <color name="grey">#9f9da1</color>
+    <color name="grey1">#dcdcdc</color>
     <color name="card_back_ground">#EBEBEB</color>
     <color name="black">#000000</color>
     <color name="red">#f90202</color>
     <color name="lightred">#c9f90202</color>
+    <color name="orange">#c9e15a11</color>
+    <color name="green">#c938ce12</color>
     <color name="white">#ffffff</color>
     <color name="my_color_highlight_press">#FFB6EFEA</color>
     <color name="my_color_highlight_focus">#CCE99E63</color>

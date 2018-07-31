@@ -44,8 +44,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String id;
 
     MainActivity activity;
-    TextView tvAchievedSale, tvTargetSale;
-    CardView cvDistributors, cvRoutes, cvShops, cvInvoices, cvReports, cvMyProfile;
+    TextView tvAchievedSale, tvTargetSale, tvAchievedNo, tvTargetNo;
+    CardView cvDistributors, cvRoutes, cvShops, cvInvoices, cvReports, cvMyProfile, cvStock, cvOrder, cvTeam;
     //    private TabLayout tabLayout;
 //    private ViewPager viewPager;
     KProgressHUD hud;
@@ -54,8 +54,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     CardView cvDrop;
     Animation slide_down, slide_up;
     long target, achieve;
-    int check=0;
-    FloatingActionButton fab;
+    int check = 0;
+//    FloatingActionButton fab;
+    double percentage = 0.0;
+    TextView tvComment;
+    String userType = SavePref.getLoginData().UserType;
 
     @SuppressLint("ValidFragment")
     public HomeFragment(MainActivity context) {
@@ -65,7 +68,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view;
+        if (userType.equalsIgnoreCase("Distributor")) {
+            view = inflater.inflate(R.layout.fragment_home1, container, false);
+            getView1(view);
+        } else {
+            view = inflater.inflate(R.layout.fragment_home, container, false);
+            getView(view);
+        }
+        hud = KProgressHUD.create(getActivity())
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setDimAmount(0.5f);
+        cvInvoices = view.findViewById(R.id.cvInvoices);
+        cvReports = view.findViewById(R.id.cvReports);
+        cvMyProfile = view.findViewById(R.id.cvMyProfile);
+        cvInvoices.setOnClickListener(this);
+        cvReports.setOnClickListener(this);
+        cvMyProfile.setOnClickListener(this);
+
         Calendar c = Calendar.getInstance();
         year = String.valueOf(c.get(Calendar.YEAR));
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
@@ -73,11 +93,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         licenceNo = SavePref.getLoginData().LicenseNumber;
         emailId = SavePref.getLoginData().EmailID;
 
-        getView(view);
 
-
-        getTargetSale();
-
+        if (!userType.equalsIgnoreCase("Distributor")) {
+            getTargetSale();
+        }
 
 
         slide_down = AnimationUtils.loadAnimation(getActivity(),
@@ -86,19 +105,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         slide_up = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.slide_up);
 
-        rlCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cvDrop.startAnimation(slide_up);
-                cvDrop.setVisibility(View.GONE);
-            }
-        });
 
         return view;
     }
 
     private void getAchievedSale() {
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeAchieved&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
+
+        String url = "";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeAchieved&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getCompanyAchieved&&" + licenceNo + "&&" + year + "&&" + month;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<AchievedModel> call = apiInterface.getUserAchieved(url);
         call.enqueue(new Callback<AchievedModel>() {
@@ -107,21 +126,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 AchievedModel obj = response.body();
                 if (obj.AchievedAmount != null) {
                     tvAchievedSale.setText(obj.AchievedAmount);
+                    tvAchievedNo.setText(obj.AchievedNumber);
                     achieve = Long.parseLong(obj.AchievedAmount);
                 } else {
                     tvAchievedSale.setText("0");
+                    tvAchievedNo.setText("0");
                     achieve = Long.parseLong(tvAchievedSale.getText().toString().trim());
                 }
-
-                if (achieve < target) {
-//                    if (!SavePref.fetchAchieveSale().equalsIgnoreCase(String.valueOf(achieve))){
-                        cvDrop.setVisibility(View.VISIBLE);
-                        cvDrop.startAnimation(slide_down);
-//                    }else {
-//                        cvDrop.setVisibility(View.GONE);
-//                    }
-
+                if (target != 0.0) {
+                    calculatePercentage();
                 }
+
+
             }
 
             @Override
@@ -131,8 +147,54 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    private void calculatePercentage() {
+        percentage = achieve * 100 / target;
+
+        if (percentage <= 50.0) {
+//                    if (!SavePref.fetchAchieveSale().equalsIgnoreCase(String.valueOf(achieve))){
+            if (getActivity() != null) {
+                cvDrop.setCardBackgroundColor(getResources().getColor(R.color.lightred));
+            }
+            tvComment.setText("Loser !! Need to work hard");
+            cvDrop.setVisibility(View.VISIBLE);
+//            cvDrop.startAnimation(slide_down);
+//                    }else {
+//                        cvDrop.setVisibility(View.GONE);
+//                    }
+
+        } else if (percentage > 50.0 && percentage <= 80.0) {
+            if (getActivity() != null) {
+                cvDrop.setCardBackgroundColor(getResources().getColor(R.color.orange));
+            }
+            tvComment.setText("Doing Good !! Little more effort ");
+            cvDrop.setVisibility(View.VISIBLE);
+//            cvDrop.startAnimation(slide_down);
+        } else if (percentage > 80.0 && percentage < 100.0) {
+            if (getActivity() != null) {
+                cvDrop.setCardBackgroundColor(getResources().getColor(R.color.yellow));
+            }
+            tvComment.setText("Great Job !! Just about to reach target");
+            cvDrop.setVisibility(View.VISIBLE);
+//            cvDrop.startAnimation(slide_down);
+        } else {
+            if (getActivity() != null) {
+                cvDrop.setCardBackgroundColor(getResources().getColor(R.color.green));
+            }
+
+            tvComment.setText("Excellent !!");
+            cvDrop.setVisibility(View.VISIBLE);
+//            cvDrop.startAnimation(slide_down);
+        }
+    }
+
     private void getTargetSale() {
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeTarget&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
+        String url = "";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getEmployeeTarget&&" + licenceNo + "&&" + year + "&&" + month + "&&" + emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getCompanyTarget&&" + licenceNo + "&&" + year + "&&" + month;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<TargetModel> call = apiInterface.getUserTarget(url);
         call.enqueue(new Callback<TargetModel>() {
@@ -141,11 +203,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 TargetModel obj = response.body();
                 if (obj.TargetAmount != null) {
                     tvTargetSale.setText(obj.TargetAmount);
+                    tvTargetNo.setText(obj.TargetNumber);
                     target = Long.parseLong(obj.TargetAmount);
 
 
                 } else {
                     tvTargetSale.setText("0");
+                    tvTargetNo.setText("0");
                     target = Long.parseLong(tvTargetSale.getText().toString().trim());
                 }
                 getAchievedSale();
@@ -160,34 +224,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     public void getView(View view) {
-
-        hud = KProgressHUD.create(getActivity())
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setDimAmount(0.5f);
-
         cvDistributors = view.findViewById(R.id.cvDistributors);
         cvRoutes = view.findViewById(R.id.cvRoutes);
         cvShops = view.findViewById(R.id.cvShops);
-        cvInvoices = view.findViewById(R.id.cvInvoices);
-        cvReports = view.findViewById(R.id.cvReports);
-        cvMyProfile = view.findViewById(R.id.cvMyProfile);
 
         tvAchievedSale = view.findViewById(R.id.tvAchievedSale);
         tvTargetSale = view.findViewById(R.id.tvTargetSale);
-        fab = view.findViewById(R.id.fab);
+        tvAchievedNo = view.findViewById(R.id.tvAchievedNo);
+        tvTargetNo = view.findViewById(R.id.tvTargetNo);
 
+//        fab = view.findViewById(R.id.fab);
+//        fab.setVisibility(View.GONE);
+
+//        if (!userType.equalsIgnoreCase("Admin")) {
+//            fab.setVisibility(View.VISIBLE);
+//        }
+
+        cvDrop = view.findViewById(R.id.cvDrop);
+        tvComment = view.findViewById(R.id.tvComment);
         cvDrop = view.findViewById(R.id.cvDrop);
         rlCancel = view.findViewById(R.id.rlCancel);
         cvDrop.setVisibility(View.GONE);
 
-
         cvDistributors.setOnClickListener(this);
         cvRoutes.setOnClickListener(this);
         cvShops.setOnClickListener(this);
-        cvInvoices.setOnClickListener(this);
-        cvReports.setOnClickListener(this);
-        cvMyProfile.setOnClickListener(this);
-        fab.setOnClickListener(this);
+//        fab.setOnClickListener(this);
+        rlCancel.setOnClickListener(this);
+
+    }
+
+    public void getView1(View view) {
+
+
+        cvStock = view.findViewById(R.id.cvStock);
+        cvOrder = view.findViewById(R.id.cvOrder);
+        cvTeam = view.findViewById(R.id.cvTeam);
+
+        cvStock.setOnClickListener(this);
+        cvOrder.setOnClickListener(this);
+        cvTeam.setOnClickListener(this);
+
 
 //        tabLayout = view.findViewById(R.id.tablayout);
 //        viewPager = view.findViewById(R.id.viewpager);
@@ -202,27 +279,40 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         int ID = v.getId();
         switch (ID) {
-            case R.id.cvDistributors:
+            case R.id.cvStock:
                 activity.onClick(1);
                 break;
-            case R.id.cvRoutes:
+            case R.id.cvOrder:
                 activity.onClick(2);
                 break;
-            case R.id.cvShops:
+            case R.id.cvTeam:
                 activity.onClick(3);
                 break;
-            case R.id.cvInvoices:
+            case R.id.cvDistributors:
                 activity.onClick(4);
                 break;
-            case R.id.cvReports:
+            case R.id.cvRoutes:
                 activity.onClick(5);
                 break;
-            case R.id.cvMyProfile:
+            case R.id.cvShops:
                 activity.onClick(6);
                 break;
-            case R.id.fab:
-                startActivity(new Intent(getActivity(), AddShopActivity.class));
+            case R.id.cvInvoices:
+                activity.onClick(7);
                 break;
+            case R.id.cvReports:
+                activity.onClick(8);
+                break;
+            case R.id.cvMyProfile:
+                activity.onClick(9);
+                break;
+            case R.id.rlCancel:
+//                cvDrop.startAnimation(slide_up);
+                cvDrop.setVisibility(View.GONE);
+                break;
+//            case R.id.fab:
+//                startActivity(new Intent(getActivity(), AddShopActivity.class));
+//                break;
 
         }
     }

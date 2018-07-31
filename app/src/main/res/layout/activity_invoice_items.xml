@@ -7,12 +7,36 @@
     android:orientation="vertical"
     tools:context="com.trio.app.activities.AddItemsActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="@color/white" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/white" />
+
+        <RelativeLayout
+            android:id="@+id/rlAddImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/white_outbox"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_regular"
+                android:text="Add Image"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,148 +46,282 @@
         android:padding="10dp"
         android:paddingLeft="10dp">
 
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Invoice No"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvInvoiceNo"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Invoice No"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/medium_text"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvInvoiceNo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/medium_text" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:text="22/10/2018"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="123456"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/medium_text" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Net Amount"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvNetAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+
+                    <TextView
+                        android:id="@+id/tvAmtStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Outsatnding"
+                        android:textColor="@color/red"
+                        android:textSize="@dimen/small_text"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dues Amount"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDuesAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distributors"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDistributors"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Route"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvRoute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:maxLines="2"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/medium_text" />
+                </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"
-                android:text="22/10/2018"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text" />
+            <RelativeLayout
+                android:id="@+id/rlInvoiceImg"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:background="@drawable/blue_outbox"
+                android:padding="2dp">
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/ivInvoiceImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </LinearLayout>
+
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/llButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Net Amount"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text"
-                android:textStyle="bold" />
+                android:layout_weight=".4"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/tvNetAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="123456"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text" />
+                <TextView
+                    android:id="@+id/tvAddPayment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outbox"
+                    android:padding="5dp"
+                    android:text="Add Payment"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
+            </RelativeLayout>
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/tvAmtStatus"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Outsatnding"
-                android:textColor="@color/red"
-                android:textSize="@dimen/small_text" />
+                android:layout_weight=".6"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvPaymentHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_outbox"
+                    android:padding="5dp"
+                    android:text="Payment Details"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/medium_text" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/llPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Distributors"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvDistributors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="123456"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Route"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvRoute"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="123456"
+            <EditText
+                android:id="@+id/etPayment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edittext_outbox"
+                android:fontFamily="@font/roboto_regular"
+                android:hint="Amount"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="10dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/medium_text" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Address"
-                android:textColor="@color/black"
-                android:textSize="@dimen/medium_text"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:maxLines="2"
-                android:text="123456"
-                android:textColor="@color/black"
+            <Button
+                android:id="@+id/btnPay"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Pay"
+                android:textColor="@color/white"
                 android:textSize="@dimen/medium_text" />
         </LinearLayout>
 
 
     </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -174,24 +332,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Products"
-            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/medium_text"
-            android:textColor="@color/colorPrimary"/>
+            android:textStyle="bold" />
+
         <TextView
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
             android:text="Quantity"
-            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/medium_text"
-            android:textColor="@color/colorPrimary"/>
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+
         android:id="@+id/rvItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

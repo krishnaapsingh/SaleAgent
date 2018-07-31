@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -19,14 +20,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trio.app.R;
+import com.trio.app.adapters.AgentsAdapter;
 import com.trio.app.appcontrollers.SavePref;
+import com.trio.app.fragments.AgentsFragment;
 import com.trio.app.fragments.HomeFragment;
 import com.trio.app.fragments.DistributorsFragment;
 import com.trio.app.fragments.InvoicesFragment;
+import com.trio.app.fragments.OrderFragment;
 import com.trio.app.fragments.ProfileFragment;
 import com.trio.app.fragments.ReportsFragment;
 import com.trio.app.fragments.RoutesFragment;
 import com.trio.app.fragments.ShopsFragment;
+import com.trio.app.fragments.StockFragment;
+import com.trio.app.fragments.TeamFragment;
 import com.trio.app.models.DistributorsModel;
 import com.trio.app.rest.ApiClient;
 import com.trio.app.rest.ApiInterface;
@@ -48,18 +54,25 @@ public class MainActivity extends AppCompatActivity
     String title;
     private boolean inBackground = false;
     boolean checkBackground = false;
+    String userType = SavePref.getLoginData().UserType;
 
 //    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_main);
+
+            if (!userType.equalsIgnoreCase("Distributor")){
+                getDistributorsList();
+            }
+
+
+
         toolbar = findViewById(R.id.toolbar);
         flContainer = findViewById(R.id.fl_container);
         setSupportActionBar(toolbar);
 
-        getDistributorsList();
 
         getView();
 
@@ -70,7 +83,26 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu item = navigationView.getMenu();
+
+        if (userType.equalsIgnoreCase("Distributor")) {
+
+            item.findItem(R.id.nav_stock).setVisible(true);
+            item.findItem(R.id.nav_order).setVisible(true);
+            item.findItem(R.id.nav_team).setVisible(true);
+            item.findItem(R.id.nav_distri).setVisible(false);
+            item.findItem(R.id.nav_routes).setVisible(false);
+            item.findItem(R.id.nav_shops).setVisible(false);
+        } else {
+            item.findItem(R.id.nav_stock).setVisible(false);
+            item.findItem(R.id.nav_order).setVisible(false);
+            item.findItem(R.id.nav_team).setVisible(false);
+            item.findItem(R.id.nav_distri).setVisible(true);
+            item.findItem(R.id.nav_routes).setVisible(true);
+            item.findItem(R.id.nav_shops).setVisible(true);
+        }
         navigationView.setNavigationItemSelectedListener(this);
+
         CircleImageView imageView = navigationView.getHeaderView(0).findViewById(R.id.nav_iv_profile);
         Glide.with(MainActivity.this)
                 .load(SavePref.getLoginData().UserPic)
@@ -89,16 +121,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getDistributorsList() {
+        String userType = SavePref.getLoginData().UserType;
         String licenceNo = SavePref.getLoginData().LicenseNumber;
         String emailId = SavePref.getLoginData().EmailID;
-        String url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&"+licenceNo+"&&"+emailId;
+        String url = "";
+        if (userType.equalsIgnoreCase("Sales Agent")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getMappedDsitributor&&" + licenceNo + "&&" + emailId;
+
+        } else if (userType.equalsIgnoreCase("Admin")) {
+            url = "http://manage.bytepaper.com/Mobile/Manufacturing/index.php?getDsitributor&&" + licenceNo;
+        }
         ApiInterface apiInterface = ApiClient.getClient();
         Call<List<DistributorsModel>> call = apiInterface.getDistributors(url);
         call.enqueue(new Callback<List<DistributorsModel>>() {
             @Override
             public void onResponse(Call<List<DistributorsModel>> call, Response<List<DistributorsModel>> response) {
                 List<DistributorsModel> obj = response.body();
-                if (obj.size()!=0){
+                if (obj.size() != 0) {
                     SavePref.saveDistributorId(obj.get(0).ID);
                 }
 
@@ -110,53 +149,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-//    @Override
-//    public void onResume() {
-//        inBackground = false;
-//
-//        if (checkBackground) {
-//            alertDialogForSessionTimeOut();
-//        }
-//        super.onResume();
-//    }
-//
-//    private void alertDialogForSessionTimeOut() {
-//
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-//                .setTitle("Sesion timeout ")
-//                .setMessage("Oops !!! Your session has been expired. You have to re-login");
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (alert.isShowing()) {
-//                    alert.dismiss();
-//                    Hawk.deleteAll();
-//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                    MainActivity.this.finish();
-//                }
-//            }
-//        }, 2000);
-//
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        inBackground = true;
-//        new CountDownTimer(300000, 1000) {
-//            public void onTick(long millisUntilFinished) {
-//            }
-//
-//            public void onFinish() {
-//                if (inBackground) {
-//                    checkBackground = true;
-//                }
-//            }
-//        }.start();
-//        super.onPause();
-//    }
 
     private void getView() {
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new HomeFragment(this)).commit();
@@ -197,10 +189,41 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         String tag = null;
         Fragment fragment = null;
+        Intent intent;
 
         switch (id) {
+            case R.id.nav_home:
+                title = "Dashboard";
+                fragment = new HomeFragment(this);
+                tag = HomeFragment.TAG;
+                check = 0;
+                fragmmentTrans(fragment, tag);
+
+                break;
+            case R.id.nav_stock:
+                title = "Stock";
+                fragment = new StockFragment(this);
+                tag = StockFragment.TAG;
+                check = 1;
+                fragmmentTrans(fragment, tag);
+                break;
+            case R.id.nav_order:
+                check = 1;
+                SavePref.saveActName("order");
+                 intent = new Intent(MainActivity.this, OrderActivity.class);
+//                i.putExtra("check", "0");
+                startActivity(intent);
+                break;
+            case R.id.nav_team:
+                title = "Team";
+                fragment = new TeamFragment(this);
+                tag = TeamFragment.TAG;
+                check = 1;
+                fragmmentTrans(fragment, tag);
+                break;
+
             case R.id.nav_distri:
-                title = "Distributors";
+                title = "Distributor";
                 fragment = new DistributorsFragment(this);
                 tag = DistributorsFragment.TAG;
                 check = 1;
@@ -224,10 +247,11 @@ public class MainActivity extends AppCompatActivity
 
                 break;
             case R.id.nav_invoices:
-                check = 0;
-                Intent i = new Intent(MainActivity.this, InvoicesActivity.class);
-                i.putExtra("check", "0");
-                startActivity(i);
+                check = 1;
+                SavePref.saveActName("invoice");
+                 intent = new Intent(MainActivity.this, InvoicesActivity.class);
+                intent.putExtra("check", "0");
+                startActivity(intent);
                 break;
             case R.id.nav_reports:
                 title = "Reports";
@@ -284,9 +308,9 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(title);
                 break;
             case 1:
-                title = "Distributors";
-                fragment = new DistributorsFragment(this);
-                tag = DistributorsFragment.TAG;
+                fragment = new StockFragment(this);
+                title = "Stock";
+                tag = StockFragment.TAG;
                 check = 1;
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, fragment, tag)
@@ -294,6 +318,37 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(title);
                 break;
             case 2:
+                check = 1;
+                SavePref.saveActName("order");
+                Intent i2 = new Intent(MainActivity.this, OrderActivity.class);
+//                i1.putExtra("check", "0");
+                startActivity(i2);
+                break;
+            case 3:
+                fragment = new TeamFragment(this);
+                title = "Team";
+                tag = TeamFragment.TAG;
+                check = 1;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_container, fragment, tag)
+                        .commit();
+                toolbar.setTitle(title);
+                break;
+
+
+            case 4:
+                fragment = new DistributorsFragment(this);
+                title = "Distributor";
+                tag = DistributorsFragment.TAG;
+                check = 1;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fl_container, fragment, tag)
+                        .commit();
+                toolbar.setTitle(title);
+                break;
+
+
+            case 5:
                 title = "Routes";
                 fragment = new RoutesFragment(this);
                 tag = RoutesFragment.TAG;
@@ -303,7 +358,7 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 toolbar.setTitle(title);
                 break;
-            case 3:
+            case 6:
                 title = "Shops";
                 fragment = new ShopsFragment(this);
                 tag = ShopsFragment.TAG;
@@ -313,13 +368,14 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 toolbar.setTitle(title);
                 break;
-            case 4:
-                check = 0;
+            case 7:
+                check = 1;
+                SavePref.saveActName("invoice");
                 Intent i1 = new Intent(MainActivity.this, InvoicesActivity.class);
                 i1.putExtra("check", "0");
                 startActivity(i1);
                 break;
-            case 5:
+            case 8:
                 title = "Reports";
                 fragment = new ReportsFragment(this);
                 tag = ReportsFragment.TAG;
@@ -330,7 +386,7 @@ public class MainActivity extends AppCompatActivity
                 toolbar.setTitle(title);
 
                 break;
-            case 6:
+            case 9:
                 title = "Profile";
                 fragment = new ProfileFragment(this);
                 tag = InvoicesFragment.TAG;
@@ -340,8 +396,9 @@ public class MainActivity extends AppCompatActivity
                         .commit();
                 toolbar.setTitle(title);
                 break;
+
             default:
-                title = "Sales Agent";
+                title = "Dashboard";
                 fragment = new HomeFragment(this);
                 tag = HomeFragment.TAG;
                 check = 0;

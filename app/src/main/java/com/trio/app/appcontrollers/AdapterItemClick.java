@@ -5,5 +5,5 @@ package com.trio.app.appcontrollers;
  */
 
 public interface AdapterItemClick {
-    void OnItemClick(String position);
+    void OnItemClick(String position, String Image);
 }

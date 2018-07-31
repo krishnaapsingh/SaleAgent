@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70dp"
+    android:layout_margin="2dp"
     android:padding="5dp"
     android:id="@+id/cvMain"
     app:cardCornerRadius="5dp"
-    android:layout_marginRight="2dp"
-    android:layout_marginLeft="2dp"
-    android:layout_marginBottom="5dp"
+
     app:cardElevation="10dp">
 
     <LinearLayout

@@ -11,6 +11,7 @@ import com.trio.app.R;
 import com.trio.app.activities.AddShopActivity;
 import com.trio.app.activities.CreateInvoiceActivity;
 import com.trio.app.models.DistributorStockModel;
+import com.trio.app.rest.ApiClient;
 
 import java.util.List;
 
@@ -21,8 +22,6 @@ import java.util.List;
 public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> {
     Context mContext;
     List<DistributorStockModel> list;
-    int itemCount = 1;
-    int productPrice = 1;
 
     public ItemAdapter1(List<DistributorStockModel> obj) {
 //        mContext = addItemsActivity;
@@ -40,32 +39,44 @@ public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> 
 
         final DistributorStockModel data = list.get(position);
 
-        productPrice = Integer.valueOf(data.Product.replaceAll("[^0-9]", "")); // returns 123
+        // returns 123
         if (data.Product != null) {
             holder.tvProductName.setText(data.Product);
         }
         if (data.Stock != null) {
             holder.tvTotalStock.setText(data.Stock);
         }
-//        holder.tvMinus.setVisibility(View.GONE);
-        holder.tvCount.setText("1");
-//        holder.tvTotalPrice.setText(productPrice);
-//        CreateInvoiceActivity.totalPrice= String.valueOf(productPrice);
-        CreateInvoiceActivity.quantity= String.valueOf("1");
-        CreateInvoiceActivity.productName = data.Product;
+        if (data.Unit != null) {
+            holder.tvUnit.setText(data.Unit);
+        }
+
+
+        if (ApiClient.isEmptyString(data.quantity)) {
+            holder.tvCount.setText("0");
+        } else {
+            holder.tvCount.setText(data.quantity);
+            holder.tvTotalPrice.setText(String.valueOf(Integer.valueOf(data.Price) * Integer.valueOf(data.quantity)));
+        }
+
 
         holder.tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int itemCount = 0;
+                if (ApiClient.isEmptyString(data.quantity)) {
+                    itemCount = 0;
+                } else {
+                    itemCount = Integer.valueOf(data.quantity);
+                }
                 itemCount++;
-                if (itemCount > 1) {
+                data.quantity = String.valueOf(itemCount);
+                if (itemCount > 0) {
                     holder.tvMinus.setVisibility(View.VISIBLE);
                 } else if (itemCount == Integer.valueOf(data.Stock)) {
                     holder.tvAdd.setVisibility(View.GONE);
                 }
-                holder.tvCount.setText(String.valueOf(itemCount));
-                holder.tvTotalPrice.setText(String.valueOf(productPrice * itemCount));
-                CreateInvoiceActivity.quantity= String.valueOf(itemCount);
+                ItemAdapter1.this.notifyDataSetChanged();
+                createCount();
 //                CreateInvoiceActivity.productName = data.Product;
 
             }
@@ -75,21 +86,52 @@ public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> 
         holder.tvMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int itemCount = 0;
+                if (ApiClient.isEmptyString(data.quantity)) {
+                    itemCount = 0;
+                } else {
+                    itemCount = Integer.valueOf(data.quantity);
+                }
                 itemCount--;
-                if (itemCount == 1) {
+                data.quantity = String.valueOf(itemCount);
+                if (itemCount < 1) {
                     holder.tvMinus.setVisibility(View.GONE);
                 } else if (itemCount < Integer.valueOf(data.Stock)) {
                     holder.tvAdd.setVisibility(View.VISIBLE);
                 }
-                holder.tvCount.setText(String.valueOf(itemCount));
-                holder.tvTotalPrice.setText(String.valueOf(productPrice * itemCount));
-                CreateInvoiceActivity.quantity= String.valueOf(itemCount);
-//                CreateInvoiceActivity.productName = data.Product;
+                ItemAdapter1.this.notifyDataSetChanged();
+                createCount();
 
             }
         });
     }
 
+    private void createCount() {
+        int totalQuantity = 0;
+        int totalAmount = 0;
+        int totalQuantity1 = 0;
+        int totalAmount1 = 0;
+
+
+        for (int i = 0; i < list.size(); i++) {
+
+            if (list.get(i).quantity != null) {
+                if (!list.get(i).quantity.equals("")) {
+                    totalQuantity = Integer.valueOf(list.get(i).quantity);
+                    totalAmount = totalQuantity * Integer.valueOf(list.get(i).Price);
+                    totalQuantity1 = totalQuantity + totalQuantity1;
+
+                    totalAmount1 = totalAmount + totalAmount1;
+                }
+            }
+
+        }
+
+        CreateInvoiceActivity.setValuesToText(totalAmount1, totalQuantity1);
+
+
+    }
 
 
     @Override
@@ -98,7 +140,7 @@ public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> 
     }
 
     public class ViewLayout extends RecyclerView.ViewHolder {
-        TextView tvProductName, tvTotalStock, tvTotalPrice, tvCount, tvMinus, tvAdd;
+        TextView tvProductName, tvTotalStock, tvTotalPrice, tvCount, tvMinus, tvAdd, tvUnit;
 
         public ViewLayout(View itemView) {
             super(itemView);
@@ -108,6 +150,7 @@ public class ItemAdapter1 extends RecyclerView.Adapter<ItemAdapter1.ViewLayout> 
             tvCount = itemView.findViewById(R.id.tvCount);
             tvMinus = itemView.findViewById(R.id.tvMinus);
             tvAdd = itemView.findViewById(R.id.tvAdd);
+            tvUnit = itemView.findViewById(R.id.tvUnit);
         }
     }
 }

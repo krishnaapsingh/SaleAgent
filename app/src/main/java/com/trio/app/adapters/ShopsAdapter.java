@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.trio.app.R;
+import com.trio.app.activities.AddShopActivity;
 import com.trio.app.activities.InvoicesActivity;
 import com.trio.app.activities.MainActivity;
 import com.trio.app.appcontrollers.SavePref;
@@ -82,8 +83,10 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.MyLayout> {
             }
         });
 
+
+
 //        if (list.get(position).Pictur != null) {
-            Glide.with(mContext).load(list.get(position).Picture).into(holder.ivImage);
+        Glide.with(mContext).load(list.get(position).Picture).into(holder.ivImage);
 
 
     }
